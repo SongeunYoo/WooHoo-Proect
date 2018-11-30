@@ -127,7 +127,6 @@ int overCount () {
 
 int item1()
 {
-	case 1 : 
 	for (int i=0, i<4, i++) {
 		for (int j=0, j<4, j++) { 				//전체적으로 훑어서
 			if (plate[i][j] == 1 || plate[i][j] == 2) {	//1과 2 찾아내기
