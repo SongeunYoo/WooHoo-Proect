@@ -12,8 +12,6 @@ char username[MAX];
 
 int main()
 {
-    printf("Enter Your Name : ");
-    scanf("%s",&username);
     
     if( score > lowest_score)//refresh ranklist
         rank();
@@ -24,11 +22,22 @@ int main()
     
 }
 
-int rank(){
+int rank(int score)
+{
     int fd;
+    char username[MAX];
+    char *arglist[3];
+    arglist[0] = "sort";
+    arglist[1] = "ranklist";
+    arglist[2] = 0;
+    
+    printf("Enter Your Name : ");
+    scanf("%s",&username);
     
     fd = open("ranklist", O_CREAT | O_WRONLY | O_APPEND, 0644);	/* then open */
     
     write(fd,score,300);
     write(fd,username,300);
+    
+    execvp("sort", arglist);
 }
