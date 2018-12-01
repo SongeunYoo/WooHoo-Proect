@@ -12,16 +12,16 @@ int overcount;
 int stored_deck[STORELENGTH][DECKLENGTH][DECKLENGTH];
 int storeEnd = 0, storeStart = 0, storeEnd2 = 0, storeStart2 = 0;
 
-void store_deck();
-void go_back();
+void store_deck(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH], int storeEnd, int storeStart);
+void go_back(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH], int storeEnd, int storeStart, int item2);
 
-int overCount();
-int item1();
+int overCount(int plate[DECKLENGTH][DECKLENGTH]);
+int item1(int plate[DECKLENGTH][DECKLENGTH], int item1);
 
-void go_up();
-void go_down();
-void go_left();
-void go_right();
+void go_up(int plate[DECKLENGTH][DECKLENGTH]);
+void go_down(int plate[DECKLENGTH][DECKLENGTH]);
+void go_left(int plate[DECKLENGTH][DECKLENGTH]);
+void go_right(int plate[DECKLENGTH][DECKLENGTH]);
 
 void for_one_player();
 void for_2players();
@@ -30,6 +30,11 @@ void for_player2();
 
 int rank(int score);
 void new_random(int table[DECKLENGTH][DECKLENGTH]);
+
+void block_sum_up(int plate[DECKLENGTH][DECKLENGTH]);
+void block_sum_down(int plate[DECKLENGTH][DECKLENGTH]);
+void block_sum_right(int plate[DECKLENGTH][DECKLENGTH]);
+void block_sum_left(int plate[DECKLENGTH][DECKLENGTH]);
 
 void for_2players()
 {
@@ -404,7 +409,23 @@ void new_random(int table[DECKLENGTH][DECKLENGTH])
 	}
 	*p0[rand()%(b)]=(rand()%100<80)?1:2;
 }
+
+void block_sum_up(int plate[DECKLENGTH][DECKLENGTH])
+{
+}
+void block_sum_down(int plate[DECKLENGTH][DECKLENGTH])
+{
+}
+void block_sum_right(int plate[DECKLENGTH][DECKLENGTH])
+{
 	
+}
+void block_sum_left(int plate[DECKLENGTH][DECKLENGTH])
+{
 	
-	
-	
+}
+
+
+
+
+
