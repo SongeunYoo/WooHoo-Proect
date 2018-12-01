@@ -5,12 +5,11 @@
 #define STORELENGTH 10
 #define MAX 40
 
-int plate[DECKLENGTH][DECKLENGTH];
-int plate2[DECKLENGTH][DECKLENGTH];
-int item1 = 0, item2 = 0, item2_1, item2_2;
-int overcount;
-int stored_deck[STORELENGTH][DECKLENGTH][DECKLENGTH];
+int plate[DECKLENGTH][DECKLENGTH], plate2[DECKLENGTH][DECKLENGTH];
+int stored_deck[STORELENGTH][DECKLENGTH][DECKLENGTH], stored_deck2[STORELENGTH][DECKLENGTH][DECKLENGTH];
 int storeEnd = 0, storeStart = 0, storeEnd2 = 0, storeStart2 = 0;
+int item1 = 0, item2 = 0, item2_1, item2_2;
+int overcount, overcount2;
 
 void store_deck(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH], int storeEnd, int storeStart);
 void go_back(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH], int storeEnd, int storeStart, int item2);
@@ -76,7 +75,7 @@ void for_one_player()
 			case 68: //<
 			{
 				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
-				//병합 + 점수 계산
+				block_sum_left(plate[DECKLENGTH][DECKLENGTH]);//병합 + 점수 계산
 				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
 				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
 				break;
@@ -85,7 +84,7 @@ void for_one_player()
 			case 67: //>
 			{
 				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
-				//병합 + 점수 계산
+				block_sum_right(plate[DECKLENGTH][DECKLENGTH]);//병합 + 점수 계산
 				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
 				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
 				break;
@@ -94,7 +93,7 @@ void for_one_player()
 			case 66: //down
 			{
 				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
-				//병합 + 점수 계산
+				block_sum_down(plate[DECKLENGTH][DECKLENGTH]); //병합 + 점수 계산
 				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
 				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
 				break;
@@ -103,7 +102,7 @@ void for_one_player()
 			case 65: //up
 			{
 				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
-				//병합 + 점수 계산
+				block_sum_up(plate[DECKLENGTH][DECKLENGTH]); //병합 + 점수 계산
 				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
 				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
 				break;
@@ -152,31 +151,31 @@ void for_player1()
 			case 97: // a
 			{
 				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
-				//병합 + 점수 계산
+				block_sum_left(plate[DECKLENGTH][DECKLENGTH]);//병합 + 점수 계산
 				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
 				break;
 			}	
 			case 100: // d
 			{
 				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
-				//병합 + 점수 계산
+				block_sum_right(plate[DECKLENGTH][DECKLENGTH]); //병합 + 점수 계산
 				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
 				break;
 			}
 			case 115: //s
 			{
 				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
-				//병합 + 점수 계산
+				block_sum_down(plate[DECKLENGTH][DECKLENGTH]);//병합 + 점수 계산
 				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
 				break;
 			}
 			case 119: //w
 			{
 				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
-				//병합 + 점수 계산
+				block_sum_up(plate[DECKLENGTH][DECKLENGTH]);//병합 + 점수 계산
 				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
 				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
 				break;
@@ -226,7 +225,7 @@ void for_player2()
 			case 68: // <
 			{
 				go_left(plate2[DECKLENGTH][DECKLENGTH]); //이동
-				//병합 + 점수 계산
+				block_sum_left(plate2[DECKLENGTH][DECKLENGTH]); //병합 + 점수 계산
 				go_left(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
 				break;
@@ -234,7 +233,7 @@ void for_player2()
 			case 67: // >
 			{
 				go_right(plate2[DECKLENGTH][DECKLENGTH]); //이동
-				//병합 + 점수 계산
+				block_sum_right(plate2[DECKLENGTH][DECKLENGTH]);//병합 + 점수 계산
 				go_right(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
 				break;
@@ -242,7 +241,7 @@ void for_player2()
 			case 66: //down
 			{
 				go_down(plate2[DECKLENGTH][DECKLENGTH]); //이동
-				//병합 + 점수 계산
+				block_sum_down(plate2[DECKLENGTH][DECKLENGTH]);//병합 + 점수 계산
 				go_down(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
 				break;
@@ -250,7 +249,7 @@ void for_player2()
 			case 65: //up
 			{
 				go_up(plate2[DECKLENGTH][DECKLENGTH]); //이동
-				//병합 + 점수 계산
+				block_sum_up(plate2[DECKLENGTH][DECKLENGTH]);//병합 + 점수 계산
 				go_up(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
 				break;
@@ -260,9 +259,9 @@ void for_player2()
 		if (check == 0)
 			continue;
 
-		overcount = overCount(plate2[DECKLENGTH][DECKLENGTH]);
+		overcount2 = overCount(plate2[DECKLENGTH][DECKLENGTH]);
 
-		if (overcount == -1)
+		if (overcount2 == -1)
 		{
 			rank(score2);
 			EndGame = 0;
@@ -301,6 +300,18 @@ void go_back(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECK
 		}
 	}
 	item2--;
+}
+
+void go_up()
+{
+	for (int i = 0 ; i < DECKLENGTH; i++)
+		for (int j = 1 ; j < DECKLENGTH; j++)
+			for (int k = j; k > 0; k--)
+				if (deck[k - 1][i] == 0)
+				{
+					deck[k - 1][i] = deck[k][i];
+					deck[k][i] = 0;
+				}
 }
 
 void go_down(int plate[DECKLENGTH][DECKLENGTH])
@@ -412,17 +423,43 @@ void new_random(int table[DECKLENGTH][DECKLENGTH])
 
 void block_sum_up(int plate[DECKLENGTH][DECKLENGTH])
 {
+	for(int i=0; i<DECKLENGTH - 1; i++)
+        	for(j=0; j<DECKLENGTH; j++)
+           		if(table[i][j]==table[i+1][j]) // 이동할때 블럭값이 같으면 
+            		{
+                		table[i][j]*=2;
+				table[i+1][j]=0;
+            		}
 }
 void block_sum_down(int plate[DECKLENGTH][DECKLENGTH])
 {
+	for(i=3; i>0; i--)
+		for(j=3; j>=0; j--)
+			if(table[i][j]==table[i-1][j])
+			{
+				table[i][j]=2;
+				table[i-1][j]=0;
+			}
 }
 void block_sum_right(int plate[DECKLENGTH][DECKLENGTH])
 {
-	
+	for(int j=3; j>0; j--)
+		for(int i=3; i>=0; i--)
+			if(table[i][j]==table[i][j-1])
+			{
+                		table[i][j]*=2;
+                		table[i][j-1]=0;
+			}
 }
 void block_sum_left(int plate[DECKLENGTH][DECKLENGTH])
 {
-	
+	for(j=0; j<3; j++)
+        for(i=0; i<4; i++)
+            if(table[i][j]==table[i][j+1])
+            {
+                table[i][j]*=2;
+                table[i][j+1]=0;
+            }
 }
 
 
