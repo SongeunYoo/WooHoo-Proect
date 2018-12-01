@@ -50,42 +50,42 @@ void for_one_player()
 		check = getchar();
 		switch(check)
 		{
-			case 1: item1(); break; //item1
-			case 2: go_back(); break; //item2, go back
+			case 1: item1(plate[DECKLENGTH][DECKLENGTH]); break; //item1
+			case 2: go_back(plate[DECKLENGTH][DECKLENGTH]); break; //item2, go back
 			case 97: //a
 			case 68: //<
 			{
-				go_left(); //이동
+				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
-				go_left(); //이동
-				store_deck();
+				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
+				store_deck(plate[DECKLENGTH][DECKLENGTH]);
 				break;
 			}	
 			case 100: //d
 			case 67: //>
 			{
-				go_right(); //이동
+				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
-				go_right(); //이동
-				store_deck();
+				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
+				store_deck(plate[DECKLENGTH][DECKLENGTH]);
 				break;
 			}
 			case 115: //s
 			case 66: //down
 			{
-				go_down(); //이동
+				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
-				go_down(); //이동
-				store_deck();
+				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
+				store_deck(plate[DECKLENGTH][DECKLENGTH]);
 				break;
 			}
 			case 119: //w
 			case 65: //up
 			{
-				go_up(); //이동
+				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
-				go_up(); //이동
-				store_deck();
+				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
+				store_deck(plate[DECKLENGTH][DECKLENGTH]);
 				break;
 			}
 			default: 	check = 0;
@@ -93,7 +93,7 @@ void for_one_player()
 		if (check == 0)
 			continue;
 
-		overcount = overCount();
+		overcount = overCount(plate[DECKLENGTH][DECKLENGTH]);
 
 		if (overcount == -1)
 		{
@@ -340,7 +340,7 @@ int rank(int score)
 	printf("Enter Your Name : ");
 	scanf("%s",&username);	
     
-	fd = open("ranklist", O_CREAT | O_WRONLY | O_APPEND, 0644);	/* then open */
+	fd = open("ranklist.txt", O_CREAT | O_WRONLY | O_APPEND, 0644);	/* then open */
     
  	write(fd,score,300);
 	write(fd,username,300);
