@@ -44,9 +44,12 @@ void for_one_player()
 {
 	char check;
 	int score = 0, EndGame = 1;
+	
+	//랜덤 배정 2번
 
 	while(EndGame)
 	{
+		//랜덤 배정 1
 		check = getchar();
 		switch(check)
 		{
@@ -117,9 +120,12 @@ void for_player1()
 {
 	char check;
 	int score = 0, EndGame = 1;
-
+	
+	//랜덤 배정 2번
+	
 	while(EndGame)
 	{
+		//랜덤 배정 1
 		check = getchar();
 		switch(check)
 		{
@@ -187,9 +193,12 @@ void for_player2()
 {
 	char check;
 	int score = 0, EndGame = 1;
-
+	
+	//랜덤 배정 2번
+	
 	while(EndGame)
 	{
+		//랜덤 배정 1
 		check = getchar();
 		switch(check)
 		{
