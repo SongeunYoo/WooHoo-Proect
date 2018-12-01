@@ -34,8 +34,8 @@ void for_2players()
 {
 	pthread_t player1, player2;
 
-	pthread_create(&player1, NULL, print_msg, NULL);
-	pthread_create(&player2, NULL, print_msg, NULL);
+	pthread_create(&player1, NULL, for_player1, NULL);
+	pthread_create(&player2, NULL, for_player2, NULL);
 	pthread_join(player1, NULL);
 	pthread_join(player2, NULL);
 }
@@ -113,38 +113,38 @@ void for_player1()
 		check = getchar();
 		switch(check)
 		{
-			case 1: item1(); break; //item1
-			case 2: go_back(); break; //item2, go back
+			case 1: item1(plate[DECKLENGTH][DECKLENGTH]); break; //item1
+			case 2: go_back(plate[DECKLENGTH][DECKLENGTH]); break; //item2, go back
 			case 97: // a
 			{
-				go_left(); //이동
+				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
-				go_left(); //이동
-				store_deck();
+				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
+				store_deck(plate[DECKLENGTH][DECKLENGTH]);
 				break;
 			}	
 			case 100: // d
 			{
-				go_right(); //이동
+				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
-				go_right(); //이동
-				store_deck();
+				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
+				store_deck(plate[DECKLENGTH][DECKLENGTH]);
 				break;
 			}
 			case 115: //s
 			{
-				go_down(); //이동
+				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
-				go_down(); //이동
-				store_deck();
+				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
+				store_deck(plate[DECKLENGTH][DECKLENGTH]);
 				break;
 			}
 			case 119: //w
 			{
-				go_up(); //이동
+				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
-				go_up(); //이동
-				store_deck();
+				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
+				store_deck(plate[DECKLENGTH][DECKLENGTH]);
 				break;
 			}
 			default: 	check = 0;
@@ -152,7 +152,7 @@ void for_player1()
 		if (check == 0)
 			continue;
 
-		overcount = overCount();
+		overcount = overCount(plate[DECKLENGTH][DECKLENGTH]);
 
 		if (overcount == -1)
 		{
@@ -173,38 +173,38 @@ void for_player2()
 		check = getchar();
 		switch(check)
 		{
-			case 1: item1(); break; //item1
-			case 2: go_back(); break; //item2, go back
+			case 1: item1(plate2[DECKLENGTH][DECKLENGTH]); break; //item1
+			case 2: go_back(plate2[DECKLENGTH][DECKLENGTH]); break; //item2, go back
 			case 68: // <
 			{
-				go_left(); //이동
+				go_left(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
-				go_left(); //이동
-				store_deck();
+				go_left(plate2[DECKLENGTH][DECKLENGTH]); //이동
+				store_deck(plate2[DECKLENGTH][DECKLENGTH]);
 				break;
 			}	
 			case 67: // >
 			{
-				go_right(); //이동
+				go_right(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
-				go_right(); //이동
-				store_deck();
+				go_right(plate2[DECKLENGTH][DECKLENGTH]); //이동
+				store_deck(plate2[DECKLENGTH][DECKLENGTH]);
 				break;
 			}
 			case 66: //down
 			{
-				go_down(); //이동
+				go_down(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
-				go_down(); //이동
-				store_deck();
+				go_down(plate2[DECKLENGTH][DECKLENGTH]); //이동
+				store_deck(plate2[DECKLENGTH][DECKLENGTH]);
 				break;
 			}
 			case 65: //up
 			{
-				go_up(); //이동
+				go_up(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
-				go_up(); //이동
-				store_deck();
+				go_up(plate2[DECKLENGTH][DECKLENGTH]); //이동
+				store_deck(plate2[DECKLENGTH][DECKLENGTH]);
 				break;
 			}
 			default: 	check = 0;
@@ -212,17 +212,17 @@ void for_player2()
 		if (check == 0)
 			continue;
 
-		overcount = overCount();
+		overcount = overCount(plate2[DECKLENGTH][DECKLENGTH]);
 
 		if (overcount == -1)
 		{
-			rank(score);
+			rank(score2);
 			EndGame = 0;
 		}
 	}
 }
 
-void store_deck()//저장해주는 함수입니다.
+void store_deck(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH])//저장해주는 함수입니다.
 {
 	for (int i = 0; i < DECKLENGTH; i++)
 		for (int j = 0; j < DECKLENGTH; j++)
@@ -232,7 +232,7 @@ void store_deck()//저장해주는 함수입니다.
 		storeEnd++;
 }
 
-void go_back()//혹은 return 값을 int로 해서 -1이 return될 경우 go_back을 실행하는 쪽에서 오류문 출력하도록 하는 것도 가능합니다.(약간의 수정 필요)
+void go_back(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH])//혹은 return 값을 int로 해서 -1이 return될 경우 go_back을 실행하는 쪽에서 오류문 출력하도록 하는 것도 가능합니다.(약간의 수정 필요)
 {
 	int temp = 0;
 
@@ -254,7 +254,7 @@ void go_back()//혹은 return 값을 int로 해서 -1이 return될 경우 go_bac
 	}
 }
 
-void go_down()
+void go_down(int plate[DECKLENGTH][DECKLENGTH])
 {
 	for (int i = 0 ; i < DECKLENGTH; i++)
 		for (int j = DECKLENGTH - 1 ; j >= 0; j--)
@@ -266,7 +266,7 @@ void go_down()
 				}
 }
 
-void go_left()
+void go_left(int plate[DECKLENGTH][DECKLENGTH])
 {
 	for (int i = 0 ; i < DECKLENGTH; i++)
 		for (int j = 1 ; j < DECKLENGTH; j++)
@@ -278,7 +278,7 @@ void go_left()
 				}
 }
 
-void go_right()
+void go_right(int plate[DECKLENGTH][DECKLENGTH])
 {
 	for (int i = 0 ; i < DECKLENGTH; i++)
 		for (int j = DECKLENGTH - 1 ; j >= 0; j--)
@@ -290,7 +290,7 @@ void go_right()
 				}
 }
 
-int overCount () {
+int overCount (int plate[DECKLENGTH][DECKLENGTH]) {
 	for (int i=0, i<4, i++) { 					//빈칸이 있는지 확인
 		for (int j=0, j<4, j++) {
 			if (plate[i][j] == 0)
@@ -320,7 +320,7 @@ int overCount () {
 		return 1;
 }
 
-int item1()
+int item1(int plate[DECKLENGTH][DECKLENGTH])
 {
 	for (int i=0, i<4, i++) {
 		for (int j=0, j<4, j++) { 				//전체적으로 훑어서
