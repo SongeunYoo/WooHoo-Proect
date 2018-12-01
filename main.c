@@ -10,7 +10,7 @@ int plate2[DECKLENGTH][DECKLENGTH];
 int item1 = 0, item2 = 0;
 int overcount;
 int stored_deck[STORELENGTH][DECKLENGTH][DECKLENGTH];
-int storeEnd = 0, storeStart = 0;
+int storeEnd = 0, storeStart = 0, storeEnd2 = 0, storeStart2 = 0;
 
 void store_deck();
 void go_back();
@@ -50,15 +50,25 @@ void for_one_player()
 		check = getchar();
 		switch(check)
 		{
-			case 1: item1(plate[DECKLENGTH][DECKLENGTH]); break; //item1
-			case 2: go_back(plate[DECKLENGTH][DECKLENGTH]); break; //item2, go back
+			case 1:
+			{
+				item1(plate2[DECKLENGTH][DECKLENGTH]);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				break; //item1
+			}
+			case 2:
+			{
+				go_back(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				break; //item2, go back
+			}
 			case 97: //a
 			case 68: //<
 			{
 				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
 				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH]);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
 				break;
 			}	
 			case 100: //d
@@ -67,7 +77,7 @@ void for_one_player()
 				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
 				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH]);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
 				break;
 			}
 			case 115: //s
@@ -76,7 +86,7 @@ void for_one_player()
 				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
 				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH]);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
 				break;
 			}
 			case 119: //w
@@ -85,7 +95,7 @@ void for_one_player()
 				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
 				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH]);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
 				break;
 			}
 			default: 	check = 0;
@@ -113,14 +123,24 @@ void for_player1()
 		check = getchar();
 		switch(check)
 		{
-			case 1: item1(plate[DECKLENGTH][DECKLENGTH]); break; //item1
-			case 2: go_back(plate[DECKLENGTH][DECKLENGTH]); break; //item2, go back
+			case 1:
+			{
+				item1(plate2[DECKLENGTH][DECKLENGTH]);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				break; //item1
+			}
+			case 2:
+			{
+				go_back(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				break; //item2, go back
+			}
 			case 97: // a
 			{
 				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
 				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH]);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
 				break;
 			}	
 			case 100: // d
@@ -128,7 +148,7 @@ void for_player1()
 				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
 				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH]);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
 				break;
 			}
 			case 115: //s
@@ -136,7 +156,7 @@ void for_player1()
 				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
 				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH]);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
 				break;
 			}
 			case 119: //w
@@ -144,7 +164,7 @@ void for_player1()
 				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
 				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH]);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
 				break;
 			}
 			default: 	check = 0;
@@ -173,14 +193,24 @@ void for_player2()
 		check = getchar();
 		switch(check)
 		{
-			case 1: item1(plate2[DECKLENGTH][DECKLENGTH]); break; //item1
-			case 2: go_back(plate2[DECKLENGTH][DECKLENGTH]); break; //item2, go back
+			case 1:
+			{
+				item1(plate2[DECKLENGTH][DECKLENGTH]);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
+				break; //item1
+			}
+			case 2:
+			{
+				go_back(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
+				break; //item2, go back
+			}
 			case 68: // <
 			{
 				go_left(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
 				go_left(plate2[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate2[DECKLENGTH][DECKLENGTH]);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
 				break;
 			}	
 			case 67: // >
@@ -188,7 +218,7 @@ void for_player2()
 				go_right(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
 				go_right(plate2[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate2[DECKLENGTH][DECKLENGTH]);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
 				break;
 			}
 			case 66: //down
@@ -196,7 +226,7 @@ void for_player2()
 				go_down(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
 				go_down(plate2[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate2[DECKLENGTH][DECKLENGTH]);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
 				break;
 			}
 			case 65: //up
@@ -204,7 +234,7 @@ void for_player2()
 				go_up(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				//병합 + 점수 계산
 				go_up(plate2[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate2[DECKLENGTH][DECKLENGTH]);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
 				break;
 			}
 			default: 	check = 0;
@@ -222,7 +252,7 @@ void for_player2()
 	}
 }
 
-void store_deck(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH])//저장해주는 함수입니다.
+void store_deck(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH], int storeEnd, int storeStart)//저장해주는 함수입니다.
 {
 	for (int i = 0; i < DECKLENGTH; i++)
 		for (int j = 0; j < DECKLENGTH; j++)
@@ -232,7 +262,7 @@ void store_deck(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][D
 		storeEnd++;
 }
 
-void go_back(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH])//혹은 return 값을 int로 해서 -1이 return될 경우 go_back을 실행하는 쪽에서 오류문 출력하도록 하는 것도 가능합니다.(약간의 수정 필요)
+void go_back(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH], int storeEnd, int storeStart)//혹은 return 값을 int로 해서 -1이 return될 경우 go_back을 실행하는 쪽에서 오류문 출력하도록 하는 것도 가능합니다.(약간의 수정 필요)
 {
 	int temp = 0;
 
