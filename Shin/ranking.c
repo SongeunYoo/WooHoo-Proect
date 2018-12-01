@@ -29,6 +29,6 @@ int rank(){
     
     fd = open("ranklist", O_CREAT | O_WRONLY | O_APPEND, 0644);	/* then open */
     
-    write(fd,username,300);
     write(fd,score,300);
+    write(fd,username,300);
 }
