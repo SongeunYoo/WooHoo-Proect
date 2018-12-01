@@ -1,9 +1,12 @@
 #include	<stdio.h>
+#include	<stdlib.h>
 
 #define DECKLENGTH 4
 #define STORELENGTH 10
+#define MAX 40
 
 int plate[DECKLENGTH][DECKLENGTH];
+int plate2[DECKLENGTH][DECKLENGTH];
 int item1 = 0, item2 = 0;
 int overcount;
 int stored_deck[STORELENGTH][DECKLENGTH][DECKLENGTH];
@@ -20,11 +23,203 @@ void go_down();
 void go_left();
 void go_right();
 
-int main(void)
+void for_one_player();
+void for_2players();
+void for_player1();
+void for_player2();
+
+int rank(int score);
+
+void for_2players()
 {
+	pthread_t player1, player2;
 
+	pthread_create(&player1, NULL, print_msg, NULL);
+	pthread_create(&player2, NULL, print_msg, NULL);
+	pthread_join(player1, NULL);
+	pthread_join(player2, NULL);
+}
 
-  return 0;
+void for_one_player()
+{
+	char check;
+	int score = 0, EndGame = 1;
+
+	while(EndGame)
+	{
+		check = getchar();
+		switch(check)
+		{
+			case 1: item1(); break; //item1
+			case 2: go_back(); break; //item2, go back
+			case 97: //a
+			case 68: //<
+			{
+				go_left(); //이동
+				//병합 + 점수 계산
+				go_left(); //이동
+				store_deck();
+				break;
+			}	
+			case 100: //d
+			case 67: //>
+			{
+				go_right(); //이동
+				//병합 + 점수 계산
+				go_right(); //이동
+				store_deck();
+				break;
+			}
+			case 115: //s
+			case 66: //down
+			{
+				go_down(); //이동
+				//병합 + 점수 계산
+				go_down(); //이동
+				store_deck();
+				break;
+			}
+			case 119: //w
+			case 65: //up
+			{
+				go_up(); //이동
+				//병합 + 점수 계산
+				go_up(); //이동
+				store_deck();
+				break;
+			}
+			default: 	check = 0;
+		}
+		if (check == 0)
+			continue;
+
+		overcount = overCount();
+
+		if (overcount == -1)
+		{
+			rank(score);
+			EndGame = 0;
+		}
+	}
+}
+
+void for_player1()
+{
+	char check;
+	int score = 0, EndGame = 1;
+
+	while(EndGame)
+	{
+		check = getchar();
+		switch(check)
+		{
+			case 1: item1(); break; //item1
+			case 2: go_back(); break; //item2, go back
+			case 97: // a
+			{
+				go_left(); //이동
+				//병합 + 점수 계산
+				go_left(); //이동
+				store_deck();
+				break;
+			}	
+			case 100: // d
+			{
+				go_right(); //이동
+				//병합 + 점수 계산
+				go_right(); //이동
+				store_deck();
+				break;
+			}
+			case 115: //s
+			{
+				go_down(); //이동
+				//병합 + 점수 계산
+				go_down(); //이동
+				store_deck();
+				break;
+			}
+			case 119: //w
+			{
+				go_up(); //이동
+				//병합 + 점수 계산
+				go_up(); //이동
+				store_deck();
+				break;
+			}
+			default: 	check = 0;
+		}
+		if (check == 0)
+			continue;
+
+		overcount = overCount();
+
+		if (overcount == -1)
+		{
+			rank(score);
+			//랭킹 출력
+			EndGame = 0;
+		}
+	}
+}
+
+void for_player2()
+{
+	char check;
+	int score = 0, EndGame = 1;
+
+	while(EndGame)
+	{
+		check = getchar();
+		switch(check)
+		{
+			case 1: item1(); break; //item1
+			case 2: go_back(); break; //item2, go back
+			case 68: // <
+			{
+				go_left(); //이동
+				//병합 + 점수 계산
+				go_left(); //이동
+				store_deck();
+				break;
+			}	
+			case 67: // >
+			{
+				go_right(); //이동
+				//병합 + 점수 계산
+				go_right(); //이동
+				store_deck();
+				break;
+			}
+			case 66: //down
+			{
+				go_down(); //이동
+				//병합 + 점수 계산
+				go_down(); //이동
+				store_deck();
+				break;
+			}
+			case 65: //up
+			{
+				go_up(); //이동
+				//병합 + 점수 계산
+				go_up(); //이동
+				store_deck();
+				break;
+			}
+			default: 	check = 0;
+		}
+		if (check == 0)
+			continue;
+
+		overcount = overCount();
+
+		if (overcount == -1)
+		{
+			rank(score);
+			EndGame = 0;
+		}
+	}
 }
 
 void store_deck()//저장해주는 함수입니다.
@@ -117,7 +312,7 @@ int overCount () {
 		}
 	}
 
-*빈칸도 없고 연속된 블럭도 없을 경우 아이템을 쓰게 해줄지 말지 결정하기
+//빈칸도 없고 연속된 블럭도 없을 경우 아이템을 쓰게 해줄지 말지 결정하기
 
 	if (item1 != 0 || item2 == 0)
 		return 0;
@@ -135,4 +330,18 @@ int item1()
 		}
 	}
 	item1--;
+}
+
+int rank(int score)
+{
+	int fd;
+	char username[MAX];
+	
+	printf("Enter Your Name : ");
+	scanf("%s",&username);	
+    
+	fd = open("ranklist", O_CREAT | O_WRONLY | O_APPEND, 0644);	/* then open */
+    
+ 	write(fd,score,300);
+	write(fd,username,300);
 }
