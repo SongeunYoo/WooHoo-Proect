@@ -45,11 +45,12 @@ void for_one_player()
 	char check;
 	int score = 0, EndGame = 1;
 	
-	//랜덤 배정 2번
+	new_random(plate[DECKLENGTH][DECKLENGTH]);
+	new_random(plate[DECKLENGTH][DECKLENGTH]);
 
 	while(EndGame)
 	{
-		//랜덤 배정 1
+		new_random(plate[DECKLENGTH][DECKLENGTH]);
 		check = getchar();
 		switch(check)
 		{
@@ -121,11 +122,12 @@ void for_player1()
 	char check;
 	int score = 0, EndGame = 1;
 	
-	//랜덤 배정 2번
+	new_random(plate[DECKLENGTH][DECKLENGTH]);
+	new_random(plate[DECKLENGTH][DECKLENGTH]);
 	
 	while(EndGame)
 	{
-		//랜덤 배정 1
+		new_random(plate[DECKLENGTH][DECKLENGTH]);
 		check = getchar();
 		switch(check)
 		{
@@ -194,11 +196,12 @@ void for_player2()
 	char check;
 	int score = 0, EndGame = 1;
 	
-	//랜덤 배정 2번
+	new_random(plate2[DECKLENGTH][DECKLENGTH]);
+	new_random(plate2[DECKLENGTH][DECKLENGTH]);
 	
 	while(EndGame)
 	{
-		//랜덤 배정 1
+		new_random(plate2[DECKLENGTH][DECKLENGTH]);
 		check = getchar();
 		switch(check)
 		{
@@ -330,22 +333,22 @@ void go_right(int plate[DECKLENGTH][DECKLENGTH])
 }
 
 int overCount (int plate[DECKLENGTH][DECKLENGTH]) {
-	for (int i=0, i<4, i++) { 					//빈칸이 있는지 확인
-		for (int j=0, j<4, j++) {
+	for (int i=0, i<DECKLENGTH, i++) { 					//빈칸이 있는지 확인
+		for (int j=0, j<DECKLENGTH, j++) {
 			if (plate[i][j] == 0)
 				return 0;
 		}
 	}
 
-	for (int i=0, i<3, i++) { 					//세로로 동일한 값이 있는지 확인
-		for (int j=0, j<4, j++) {
+	for (int i=0, i<DECKLENGTH-1, i++) { 					//세로로 동일한 값이 있는지 확인
+		for (int j=0, j<DECKLENGTH, j++) {
 			if (plate[i][j] == plate[i+1][j])
 				return 0;
 		}
 	}
 
-	for (int j=0, j<3, j++) { 					//가로로 동일한 값이 있는지 확인
-		for (int i=0, i<4, i++) {
+	for (int j=0, j<DECKLENGTH-1, j++) { 					//가로로 동일한 값이 있는지 확인
+		for (int i=0, i<DECKLENGTH, i++) {
 			if (plate[i][j] == plate[i][j+1])
 				return 0;
 		}
@@ -361,8 +364,8 @@ int overCount (int plate[DECKLENGTH][DECKLENGTH]) {
 
 int item1(int plate[DECKLENGTH][DECKLENGTH])
 {
-	for (int i=0, i<4, i++) {
-		for (int j=0, j<4, j++) { 				//전체적으로 훑어서
+	for (int i=0, i<DECKLENGTH, i++) {
+		for (int j=0, j<DECKLENGTH, j++) { 				//전체적으로 훑어서
 			if (plate[i][j] == 1 || plate[i][j] == 2) {	//1과 2 찾아내기
 				plate[i][j] = 0; 		//0으로 바꿈
 			}
@@ -384,3 +387,22 @@ int rank(int score)
  	write(fd,score,300);
 	write(fd,username,300);
 }
+
+void new_random(int table[DECKLENGTH][DECKLENGTH])
+{
+	int b;
+	int* p0[DECKLENGTH * DECKLENGTH]={0};
+
+	for(int i=0, b=0;i<DECKLENGTH;i++){
+	    for(int j=0;j<DECKLENGTH;j++)
+ 	       if(table[i][j] == 0){
+        	    p0[b]=&table[i][j];
+		       b++;
+	       }
+	}
+	*p0[rand()%(b)]=(rand()%100<80)?1:2;
+}
+	
+	
+	
+	
