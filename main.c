@@ -7,7 +7,7 @@
 
 int plate[DECKLENGTH][DECKLENGTH];
 int plate2[DECKLENGTH][DECKLENGTH];
-int item1 = 0, item2 = 0;
+int item1 = 0, item2 = 0, item2_1, item2_2;
 int overcount;
 int stored_deck[STORELENGTH][DECKLENGTH][DECKLENGTH];
 int storeEnd = 0, storeStart = 0, storeEnd2 = 0, storeStart2 = 0;
@@ -29,6 +29,7 @@ void for_player1();
 void for_player2();
 
 int rank(int score);
+void new_random(int table[DECKLENGTH][DECKLENGTH]);
 
 void for_2players()
 {
@@ -56,8 +57,8 @@ void for_one_player()
 		{
 			case 1:
 			{
-				item1(plate2[DECKLENGTH][DECKLENGTH]);
-				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				item1(plate2[DECKLENGTH][DECKLENGTH], item1);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, item2);
 				break; //item1
 			}
 			case 2:
@@ -133,8 +134,8 @@ void for_player1()
 		{
 			case 1:
 			{
-				item1(plate2[DECKLENGTH][DECKLENGTH]);
-				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				item1(plate2[DECKLENGTH][DECKLENGTH], item1);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, item2);
 				break; //item1
 			}
 			case 2:
@@ -207,8 +208,8 @@ void for_player2()
 		{
 			case 1:
 			{
-				item1(plate2[DECKLENGTH][DECKLENGTH]);
-				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
+				item1(plate2[DECKLENGTH][DECKLENGTH], item2_1);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2, item2_2);
 				break; //item1
 			}
 			case 2:
@@ -274,7 +275,7 @@ void store_deck(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][D
 		storeEnd++;
 }
 
-void go_back(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH], int storeEnd, int storeStart)//혹은 return 값을 int로 해서 -1이 return될 경우 go_back을 실행하는 쪽에서 오류문 출력하도록 하는 것도 가능합니다.(약간의 수정 필요)
+void go_back(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH], int storeEnd, int storeStart, int item2)//혹은 return 값을 int로 해서 -1이 return될 경우 go_back을 실행하는 쪽에서 오류문 출력하도록 하는 것도 가능합니다.(약간의 수정 필요)
 {
 	int temp = 0;
 
@@ -294,6 +295,7 @@ void go_back(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECK
 			plate[i][j] = stored_deck[storeStart][i][j];
 		}
 	}
+	item2--;
 }
 
 void go_down(int plate[DECKLENGTH][DECKLENGTH])
@@ -362,7 +364,7 @@ int overCount (int plate[DECKLENGTH][DECKLENGTH]) {
 		return 1;
 }
 
-int item1(int plate[DECKLENGTH][DECKLENGTH])
+int item1(int plate[DECKLENGTH][DECKLENGTH], int item1)
 {
 	for (int i=0, i<DECKLENGTH, i++) {
 		for (int j=0, j<DECKLENGTH, j++) { 				//전체적으로 훑어서
