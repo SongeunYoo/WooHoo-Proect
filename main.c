@@ -6,10 +6,11 @@
 #define MAX 40
 
 int plate[DECKLENGTH][DECKLENGTH], plate2[DECKLENGTH][DECKLENGTH];
-int stored_deck[STORELENGTH][DECKLENGTH][DECKLENGTH], stored_deck2[STORELENGTH][DECKLENGTH][DECKLENGTH];
-int storeEnd = 0, storeStart = 0, storeEnd2 = 0, storeStart2 = 0;
-int item1 = 0, item2 = 0, item2_1, item2_2;
+int stored_deck[STORELENGTH][DECKLENGTH][DECKLENGTH], stored_deck2[STORELENGTH][DECKLENGTH][DECKLENGTH], stored_score[STORELENGTH], stored_score2[STORELENGTH];
+int storeEnd, storeStart, storeEnd2, storeStart2;
+int item1, item2, item2_1, item2_2;
 int overcount, overcount2;
+int standardScore[2] = {100, 500}, standardScore2[2] = {100, 500};
 
 void store_deck(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH], int storeEnd, int storeStart);
 void go_back(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH], int storeEnd, int storeStart, int item2);
@@ -29,6 +30,7 @@ void for_player2();
 
 int rank(int score);
 void new_random(int table[DECKLENGTH][DECKLENGTH]);
+void give_item (int score, int stadardScore[2], int item1, int item2);
 
 void block_sum_up(int plate[DECKLENGTH][DECKLENGTH], int score);
 void block_sum_down(int plate[DECKLENGTH][DECKLENGTH], int score);
@@ -62,13 +64,13 @@ void for_one_player()
 			case 1:
 			{
 				item1(plate2[DECKLENGTH][DECKLENGTH], item1);
-				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, item2);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, item2, score, stored_score);
 				break; //item1
 			}
 			case 2:
 			{
-				go_back(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
-				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				go_back(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, score, stored_score);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, score, stored_score);
 				break; //item2, go back
 			}
 			case 97: //a
@@ -77,7 +79,7 @@ void for_one_player()
 				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
 				block_sum_left(plate[DECKLENGTH][DECKLENGTH], score);//병합 + 점수 계산
 				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, score, stored_score);
 				break;
 			}	
 			case 100: //d
@@ -86,7 +88,7 @@ void for_one_player()
 				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
 				block_sum_right(plate[DECKLENGTH][DECKLENGTH], score);//병합 + 점수 계산
 				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, score, stored_score);
 				break;
 			}
 			case 115: //s
@@ -95,7 +97,7 @@ void for_one_player()
 				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
 				block_sum_down(plate[DECKLENGTH][DECKLENGTH], score); //병합 + 점수 계산
 				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, score, stored_score);
 				break;
 			}
 			case 119: //w
@@ -104,11 +106,14 @@ void for_one_player()
 				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
 				block_sum_up(plate[DECKLENGTH][DECKLENGTH], score); //병합 + 점수 계산
 				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, score, stored_score);
 				break;
 			}
 			default: 	check = 0;
 		}
+		
+		give_item (score, stadardScore, item1, item2);
+		
 		if (check == 0)
 			continue;
 
@@ -139,13 +144,13 @@ void for_player1()
 			case 1:
 			{
 				item1(plate2[DECKLENGTH][DECKLENGTH], item1);
-				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, item2);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, item2, score, stored_score);
 				break; //item1
 			}
 			case 2:
 			{
-				go_back(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
-				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				go_back(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, score, stored_score);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, score, stored_score);
 				break; //item2, go back
 			}
 			case 97: // a
@@ -153,7 +158,7 @@ void for_player1()
 				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
 				block_sum_left(plate[DECKLENGTH][DECKLENGTH], score);//병합 + 점수 계산
 				go_left(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, score, stored_score);
 				break;
 			}	
 			case 100: // d
@@ -161,7 +166,7 @@ void for_player1()
 				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
 				block_sum_right(plate[DECKLENGTH][DECKLENGTH], score); //병합 + 점수 계산
 				go_right(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, score, stored_score);
 				break;
 			}
 			case 115: //s
@@ -169,7 +174,7 @@ void for_player1()
 				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
 				block_sum_down(plate[DECKLENGTH][DECKLENGTH], score);//병합 + 점수 계산
 				go_down(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, score, stored_score);
 				break;
 			}
 			case 119: //w
@@ -177,11 +182,14 @@ void for_player1()
 				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
 				block_sum_up(plate[DECKLENGTH][DECKLENGTH], score);//병합 + 점수 계산
 				go_up(plate[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
+				store_deck(plate[DECKLENGTH][DECKLENGTH], storeEnd, storeStart, score, stored_score);
 				break;
 			}
 			default: 	check = 0;
 		}
+		
+		give_item (score, stadardScore, item1, item2);
+		
 		if (check == 0)
 			continue;
 
@@ -213,13 +221,13 @@ void for_player2()
 			case 1:
 			{
 				item1(plate2[DECKLENGTH][DECKLENGTH], item2_1);
-				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2, item2_2);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2, item2_2, score2, stored_score2);
 				break; //item1
 			}
 			case 2:
 			{
-				go_back(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
-				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
+				go_back(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2, score2, stored_score2);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2, score2, stored_score2);
 				break; //item2, go back
 			}
 			case 68: // <
@@ -227,7 +235,7 @@ void for_player2()
 				go_left(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				block_sum_left(plate2[DECKLENGTH][DECKLENGTH], score2); //병합 + 점수 계산
 				go_left(plate2[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2, score2, stored_score2);
 				break;
 			}	
 			case 67: // >
@@ -235,7 +243,7 @@ void for_player2()
 				go_right(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				block_sum_right(plate2[DECKLENGTH][DECKLENGTH], score2);//병합 + 점수 계산
 				go_right(plate2[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2, score2, stored_score2);
 				break;
 			}
 			case 66: //down
@@ -243,7 +251,7 @@ void for_player2()
 				go_down(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				block_sum_down(plate2[DECKLENGTH][DECKLENGTH], score2);//병합 + 점수 계산
 				go_down(plate2[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2, score2, stored_score2);
 				break;
 			}
 			case 65: //up
@@ -251,11 +259,14 @@ void for_player2()
 				go_up(plate2[DECKLENGTH][DECKLENGTH]); //이동
 				block_sum_up(plate2[DECKLENGTH][DECKLENGTH], score2);//병합 + 점수 계산
 				go_up(plate2[DECKLENGTH][DECKLENGTH]); //이동
-				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2);
+				store_deck(plate2[DECKLENGTH][DECKLENGTH], storeEnd2, storeStart2, score2, stored_score2);
 				break;
 			}
 			default: 	check = 0;
 		}
+		
+		give_item (score2, stadardScore2, item2_1, item2_2);
+		
 		if (check == 0)
 			continue;
 
@@ -269,17 +280,18 @@ void for_player2()
 	}
 }
 
-void store_deck(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH], int storeEnd, int storeStart)//저장해주는 함수입니다.
+void store_deck(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH], int storeEnd, int storeStart, int stored_score, int score)//저장해주는 함수입니다.
 {
 	for (int i = 0; i < DECKLENGTH; i++)
 		for (int j = 0; j < DECKLENGTH; j++)
 			stored_deck[storeStart][i][j] = plate[i][j];
+	stored_score[storeStart] = score;
 
 	if ((++storeStart)%STORELENGTH == storeEnd)
 		storeEnd++;
 }
 
-void go_back(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH], int storeEnd, int storeStart, int item2)//혹은 return 값을 int로 해서 -1이 return될 경우 go_back을 실행하는 쪽에서 오류문 출력하도록 하는 것도 가능합니다.(약간의 수정 필요)
+void go_back(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECKLENGTH], int storeEnd, int storeStart, int item2, int stored_score, int score)//혹은 return 값을 int로 해서 -1이 return될 경우 go_back을 실행하는 쪽에서 오류문 출력하도록 하는 것도 가능합니다.(약간의 수정 필요)
 {
 	int temp = 0;
 
@@ -299,6 +311,7 @@ void go_back(int stored_deck[DECKLENGTH][DECKLENGTH], int plate[DECKLENGTH][DECK
 			plate[i][j] = stored_deck[storeStart][i][j];
 		}
 	}
+	score = stored_score[storeStart];
 	item2--;
 }
 
@@ -466,7 +479,20 @@ void block_sum_left(int plate[DECKLENGTH][DECKLENGTH], int score)
 			}
 }
 
+void give_item (int score, int stadardScore[2], int item1, int item2) {
+	
+	if (standardScorep[0] <= score) 		//점수가 아이템1 기준 점수보다 높으면
+	{
+		item1++;			//아이템1 갯수 증가
+		scoitem1 *= 2;		//아이템1 기준 점수는 100 증가
+	}
 
+	else if (standardScorep[1] <= score)
+	{
+		item2++;
+		scoiterm2 += 500;
+	}
+}
 
 
 
