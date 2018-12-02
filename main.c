@@ -65,9 +65,9 @@ int main(void)
         
         switch (check)
         {
-            case 1: for_one_player(); break;
-            case 2: for_two_players(); break;
-            case 3: for_one_player();//랭킹 출력
+            case '1': for_one_player(); printf("hihi"); break;
+            case '2': for_two_players(); break;
+            case '3': for_one_player();//랭킹 출력
         }
         return 0;
     }
