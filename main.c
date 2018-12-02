@@ -94,6 +94,7 @@ void for_one_player()
     {
         printf("hihi\n");
         new_random(&deck1);
+        scanf("%d", &score); // 임시 체크용 scanf
         LoadPlayBoard(&deck1);
         check = getchar();
         switch (check)
