@@ -5,6 +5,7 @@
 #include	<curses.h>
 #include	<fcntl.h>
 #include	<ctype.h>
+#include	<time.h>
 
 #define DECKLENGTH 4
 #define STORELENGTH 10
@@ -18,6 +19,7 @@ typedef struct deck {
 	int storeEnd, storeStart;
 	int item1, item2;
 	int overcount;
+	int newNum;
 	char userName[100];
 } deck;
 
@@ -84,28 +86,30 @@ void for_two_players()
 void for_one_player()
 {
 	char check;
-	int score = 0, EndGame = 1;
+	int EndGame = 1;
 
 	//1인용 창 띄우기
+	deck1.newNum = 1;
 	new_random(&deck1);
+	deck1.newNum = 1;
 
 	while (EndGame)
 	{
 		new_random(&deck1);
 		LoadPlayBoard(&deck1);
 		check = getch();
+		addstr("A\n");
+
 		switch (check)
 		{
 		case '1':
 		{
 			delete_01(&deck1);
-			store_deck(&deck1);
 			break; //item1
 		}
 		case '2':
 		{
 			go_back(&deck1);
-			store_deck(&deck1);
 			break; //item2, go back
 		}
 		case 97: //a
@@ -114,7 +118,7 @@ void for_one_player()
 			go_left(&deck1); //이동
 			block_sum_left(&deck1);//병합 + 점수 계산
 			go_left(&deck1); //이동
-			store_deck(&deck1);
+			deck1.newNum = 1;
 			break;
 		}
 		case 100: //d
@@ -123,7 +127,7 @@ void for_one_player()
 			go_right(&deck1); //이동
 			block_sum_right(&deck1);//병합 + 점수 계산
 			go_right(&deck1); //이동
-			store_deck(&deck1);
+			deck1.newNum = 1;
 			break;
 		}
 		case 115: //s
@@ -132,7 +136,7 @@ void for_one_player()
 			go_down(&deck1); //이동
 			block_sum_down(&deck1); //병합 + 점수 계산
 			go_down(&deck1); //이동
-			store_deck(&deck1);
+			deck1.newNum = 1;
 			break;
 		}
 		case 119: //w
@@ -141,21 +145,24 @@ void for_one_player()
 			go_up(&deck1); //이동
 			block_sum_up(&deck1); //병합 + 점수 계산
 			go_up(&deck1); //이동
-			store_deck(&deck1);
+			deck1.newNum = 1;
 			break;
 		}
 		default: 	check = 0; break;
 		}
-
+		addstr("B\n");
+		store_deck(&deck1);
+		addstr("c\n");
 		give_item(&deck1);
-
+		addstr("D\n");
 		if (check == 0)
 			continue;
-
+addstr("E\n");
 		deck1.overcount = overCount(&deck1);
-
+addstr("F\n");
 		if (deck1.overcount == 1)
 		{
+	addstr("G\n");
 			rank(&deck1);
 			EndGame = 0;
 			endFLAG = 1;
@@ -166,7 +173,7 @@ void for_one_player()
 void for_player1()
 {
 	char check;
-	int score = 0, EndGame = 1;
+	int EndGame = 1;
 
 	new_random(&deck1);
 
@@ -241,7 +248,7 @@ void for_player1()
 void for_player2()
 {
 	char check;
-	int score = 0, EndGame = 1;
+	int EndGame = 1;
 
 	new_random(&deck2);
 	new_random(&deck2);
@@ -460,6 +467,11 @@ void new_random(deck *deck)
 	int b = 0, index;
 	int p[16][2] = { 0 };
 
+	if (deck->newNum == 0)
+		return;
+
+	srand(time(NULL));
+
 	for (int i = 0; i < DECKLENGTH; i++)
 		for (int j = 0; j < DECKLENGTH; j++)
 			if (deck->plate[i][j] == 0) {
@@ -467,8 +479,12 @@ void new_random(deck *deck)
 				p[b][1] = j;
 				b++;
 			}
-	index = rand() % (b);
-	deck->plate[p[index][0]][p[index][1]] = (rand() % 100 < 80) ? 1 : 2;
+	if (b != 0)
+	{
+		index = rand() % (b);
+		deck->plate[p[index][0]][p[index][1]] = (rand() % 100 < 80) ? 1 : 2;
+	}
+	deck->newNum = 0;
 
 	return;
 }
@@ -477,7 +493,7 @@ void block_sum_up(deck *deck)
 {
 	for (int i = 0; i < DECKLENGTH - 1; i++)
 		for (int j = 0; j < DECKLENGTH; j++)
-			if (deck->plate[i][j] == deck->plate[i + 1][j]) // 이동할때 블럭값이 같으면 
+			if (deck->plate[i][j] == deck->plate[i + 1][j] && deck->plate[i][j] != 0) // 이동할때 블럭값이 같으면 
 			{
 				deck->plate[i][j] *= 2;
 				deck->plate[i + 1][j] = 0;
@@ -488,7 +504,7 @@ void block_sum_down(deck *deck)
 {
 	for (int i = DECKLENGTH - 1; i>0; i--)
 		for (int j = DECKLENGTH - 1; j >= 0; j--)
-			if (deck->plate[i][j] == deck->plate[i - 1][j])
+			if (deck->plate[i][j] == deck->plate[i - 1][j] && deck->plate[i][j] != 0)
 			{
 				deck->plate[i][j] *= 2;
 				deck->plate[i - 1][j] = 0;
@@ -499,7 +515,7 @@ void block_sum_right(deck *deck)
 {
 	for (int j = DECKLENGTH - 1; j>0; j--)
 		for (int i = DECKLENGTH - 1; i >= 0; i--)
-			if (deck->plate[i][j] == deck->plate[i][j - 1])
+			if (deck->plate[i][j] == deck->plate[i][j - 1] && deck->plate[i][j] != 0)
 			{
 				deck->plate[i][j] *= 2;
 				deck->plate[i][j - 1] = 0;
@@ -510,7 +526,7 @@ void block_sum_left(deck *deck)
 {
 	for (int j = 0; j<DECKLENGTH - 1; j++)
 		for (int i = 0; i<DECKLENGTH; i++)
-			if (deck->plate[i][j] == deck->plate[i][j + 1])
+			if (deck->plate[i][j] == deck->plate[i][j + 1] && deck->plate[i][j] != 0)
 			{
 				deck->plate[i][j] *= 2;
 				deck->plate[i][j + 1] = 0;
