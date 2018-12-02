@@ -1,10 +1,27 @@
+/*
+ hello5.c
+ playboard temporary file
+ cmd output ver.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define SIZE 4
 int score=0;
-int board[SIZE][SIZE]
+int board[SIZE][SIZE];
+
+void LoadColor(int value, char *color);
+void initBoard();
+void LoadPlayBoard();
+
+int main(void)
+{
+    LoadPlayBoard();
+    
+    return 0;
+}
 
 void LoadColor(int value, char *color) {
     int code[] = {8,255,1,255,2,255,3,255,4,255,5,255,6,255,7,255,9,0,10,0,11,0,12,0,13,0,14,0,255,0,255,0};
@@ -16,8 +33,8 @@ void LoadColor(int value, char *color) {
             if (background+2 < code + sizeof(code)) {
                 background += 2;
                 foreground += 2;
+            }
         }
-    }
     snprintf(color,40,"\033[38;5;%d;48;5;%dm",*foreground,*background);//anprintf: String Buffer로 출력
 }
 
@@ -70,4 +87,5 @@ void LoadPlayBoard() {
     }
     printf("\n");
 }
+
 
