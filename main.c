@@ -90,7 +90,7 @@ void for_one_player()
     int score = 0, EndGame = 1;
     
     //1인용 창 띄우기
-    LoadColor();
+    LoadPlayBoard();
     
     new_random(&deck1);
     new_random(&deck1);
