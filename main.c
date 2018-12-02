@@ -8,9 +8,6 @@
 #define DECKLENGTH 4
 #define STORELENGTH 10
 #define MAX 40
-#define SIZE 4
-int score=0;
-int board[SIZE][SIZE];
 
 typedef struct deck {
     int plate[DECKLENGTH][DECKLENGTH];
@@ -24,6 +21,7 @@ typedef struct deck {
 } deck;
 
 deck deck1, deck2;
+int endFLAG = 0;
 
 void store_deck(deck *deck);
 void go_back(deck *deck);
@@ -65,7 +63,7 @@ int main(void)
         
         switch (check)
         {
-            case '1': for_one_player(); printf("hihi"); break;
+            case '1': printf("hihi\n"); for_one_player(); break;
             case '2': for_two_players(); break;
             case '3': for_one_player();//랭킹 출력
         }
@@ -87,17 +85,19 @@ void for_two_players()
 void for_one_player()
 {
     char check;
-    int score = 0, EndGame = 1;
+    int score = 0, EndGame = 0;
     
     //1인용 창 띄우기
-    LoadPlayBoard();
-    
+    LoadPlayBoard(&deck1);
+    printf("hihi\n");
     new_random(&deck1);
-    new_random(&deck1);
+    printf("hihi\n");
     
-    while (EndGame)
+    while (!EndGame)
     {
+        printf("hihi\n");
         new_random(&deck1);
+        LoadPlayBoard(&deck1);
         check = getchar();
         switch (check)
         {
@@ -162,7 +162,8 @@ void for_one_player()
         if (deck1.overcount == -1)
         {
             rank(&deck1);
-            EndGame = 0;
+            EndGame = 1;
+            endFLAG = 1;
         }
     }
 }
@@ -173,11 +174,11 @@ void for_player1()
     int score = 0, EndGame = 1;
     
     new_random(&deck1);
-    new_random(&deck1);
     
     while (EndGame)
     {
         new_random(&deck1);
+        LoadPlayBoard(deck1);
         check = getchar();
         switch (check)
         {
@@ -315,7 +316,6 @@ void for_player2()
         if (deck2.overcount == -1)
         {
             rank(&deck2);
-            EndGame = 0;
         }
     }
 }
@@ -430,7 +430,10 @@ int overCount(deck *deck) {
     if (deck->item1 != 0 || deck->item2 == 0)
         return 0;
     else
+    {
+        endFLAG = 1;//GAME OVER: set flag
         return 1;
+    }
 }
 
 int delete_01(deck *deck)
@@ -533,7 +536,7 @@ void give_item(deck *deck) {
     }
 }
 
-void LoadPlayBoard() {
+void LoadPlayBoard(deck *deck) {
     int i,j;
     char c;
     char color[40]; //draw background color
@@ -544,28 +547,23 @@ void LoadPlayBoard() {
     //open curses
     
     addstr("Welcome to 2048                ");
-    addstr(score);
+    addstr(deck->score);
     addstr("\n\n");
     refresh();
     
-    for (j=0;j<SIZE;j++) {
-        for (i=0;i<SIZE;i++) {
-            //LoadColor(board[i][j],color);
-            //addstr(color);
+    for (j=0;j<DECKLENGTH;j++) {
+        for (i=0;i<DECKLENGTH;i++) {
             addstr("       ");
-            //addstr(reset);
             refresh();
         }
         addstr("\n");//first line
         refresh();
         
-        for (i=0;i<SIZE;i++) {
-            //LoadColor(board[i][j],color);
-            //addstr(color);
+        for (i=0;i<DECKLENGTH;i++) {
             refresh();
-            if (board[i][j]!=0) {
+            if (deck->plate[i][j]!=0) {
                 addstr("   ");
-                addstr(board[i][j]);
+                addstr(deck->plate[i][j]);
                 addstr("   ");
                 refresh();
                 //add color when data inserted
@@ -574,17 +572,13 @@ void LoadPlayBoard() {
                 addstr("   o   ");
                 refresh();
             }
-            //addstr(reset);
-            refresh();
         }
         addstr("\n");//second line : data inserted
         refresh();
         
-        for (i=0;i<SIZE;i++) {//
-            //LoadColor(board[i][j],color);
-            //addstr(color);
+        for (i=0;i<DECKLENGTH;i++) {//
+
             addstr("       ");
-            //addstr(reset);
             refresh();
         }
         addstr("\n");//third line
@@ -593,8 +587,11 @@ void LoadPlayBoard() {
     addstr("\n");
     refresh();
     
-    addstr("Preaa any key to exit\n");
-    refresh();
-    getch();
-    endwin();
+    if(endFLAG == 1)
+    {
+        addstr("Preaa any key to exit\n");
+        refresh();
+        getch();
+        endwin();
+    }
 }
