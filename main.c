@@ -2,8 +2,9 @@
 #include	<stdlib.h>
 #include	<unistd.h>
 #include	<pthread.h>
-#include    <curses.h>
-#include    <fcntl.h>
+#include	<curses.h>
+#include	<fcntl.h>
+#include	<ctype.h>
 
 #define DECKLENGTH 4
 #define STORELENGTH 10
@@ -62,7 +63,7 @@ int main(void)
         
         switch (check)
         {
-            case '1': printf("hihi\n"); for_one_player(); break;
+            case '1': for_one_player(); break;
             case '2': for_two_players(); break;
             default: continue;
         }
@@ -86,13 +87,10 @@ void for_one_player()
     int score = 0, EndGame = 0;
     
     //1인용 창 띄우기
-    printf("hihi\n");
     new_random(&deck1);
-    printf("hihi\n");
-    
+
     while (!EndGame)
     {
-        printf("hihi\n");
         new_random(&deck1);
         LoadPlayBoard(&deck1);
         check = getch();
@@ -459,17 +457,20 @@ int rank(deck *deck)
 
 void new_random(deck *deck)
 {
-    int b;
-    int* p0[DECKLENGTH * DECKLENGTH] = { 0 };
-    
-    for (int i = 0, b = 0; i<DECKLENGTH; i++) {
-        for (int j = 0; j<DECKLENGTH; j++)
-            if (deck->plate[i][j] == 0) {
-                p0[b] = &deck->plate[i][j];
-                b++;
-            }
-    }
-    *p0[rand() % (b)] = (rand() % 100<80) ? 1 : 2;
+	int b = 0, index;
+	int p[16][2] = { 0 };
+	
+	for (int i = 0; i < DECKLENGTH; i++)
+		for (int j = 0; j < DECKLENGTH; j++)
+			if (deck->plate[i][j] == 0) {
+				p[b][0] = i;
+				p[b][1] = j;
+				b++;
+			}
+	index = rand() % (b);
+	deck->plate[p[index][0]][p[index][1]] = (rand() % 100 < 80) ? 1 : 2;
+
+	return;
 }
 
 void block_sum_up(deck *deck)
