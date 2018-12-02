@@ -1,5 +1,7 @@
 #include	<stdio.h>
 #include	<stdlib.h>
+#include	<unistd.h>
+#include	<pthread.h>
 
 #define DECKLENGTH 4
 #define STORELENGTH 10
@@ -337,7 +339,7 @@ void go_back(deck *deck)//혹은 return 값을 int로 해서 -1이 return될 경
 	{
 		for (int j = 0; j < DECKLENGTH; j++)
 		{
-			deck->plate[i][j] = deck->stored_deck[storeStart][i][j];
+			deck->plate[i][j] = deck->stored_deck[deck->storeStart][i][j];
 		}
 	}
 	deck->score = deck->stored_score[deck->storeStart];
