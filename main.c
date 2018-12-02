@@ -85,7 +85,6 @@ void for_one_player()
     int score = 0, EndGame = 0;
     
     //1인용 창 띄우기
-    LoadPlayBoard(&deck1);
     printf("hihi\n");
     new_random(&deck1);
     printf("hihi\n");
@@ -175,8 +174,7 @@ void for_player1()
     while (EndGame)
     {
         new_random(&deck1);
-        LoadPlayBoard(deck1);
-        check = getchar();
+        check = getch();
         switch (check)
         {
             case 1:
@@ -252,7 +250,7 @@ void for_player2()
     while (EndGame)
     {
         new_random(&deck2);
-        check = getchar();
+        check = getch();
         switch (check)
         {
             case 1:
