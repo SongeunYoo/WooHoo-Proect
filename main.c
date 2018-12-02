@@ -48,8 +48,7 @@ void block_sum_down(deck *deck);
 void block_sum_right(deck *deck);
 void block_sum_left(deck *deck);
 
-void initBoard();
-void LoadPlayBoard();
+void LoadPlayBoard(deck *deck);
 
 int main(void)
 {
@@ -65,14 +64,12 @@ int main(void)
         {
             case '1': printf("hihi\n"); for_one_player(); break;
             case '2': for_two_players(); break;
-            case '3': for_one_player();//랭킹 출력
         }
         return 0;
     }
 }
 void for_two_players()
 {
-    
     //2인용 창 띄우기
     pthread_t player1, player2;
     
@@ -159,7 +156,7 @@ void for_one_player()
         
         deck1.overcount = overCount(&deck1);
         
-        if (deck1.overcount == -1)
+        if (deck1.overcount == 1)
         {
             rank(&deck1);
             EndGame = 1;
