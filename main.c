@@ -64,9 +64,10 @@ int main(void)
         {
             case '1': printf("hihi\n"); for_one_player(); break;
             case '2': for_two_players(); break;
+            default: continue;
         }
-        return 0;
     }
+    return 0;
 }
 void for_two_players()
 {
