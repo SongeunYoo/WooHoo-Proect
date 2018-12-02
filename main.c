@@ -84,25 +84,25 @@ void for_two_players()
 void for_one_player()
 {
     char check;
-    int score = 0, EndGame = 0;
+    int score = 0, EndGame = 1;
     
     //1인용 창 띄우기
     new_random(&deck1);
 
-    while (!EndGame)
+    while (EndGame)
     {
         new_random(&deck1);
         LoadPlayBoard(&deck1);
         check = getch();
         switch (check)
         {
-            case 1:
+            case '1':
             {
                 delete_01(&deck1);
                 store_deck(&deck1);
                 break; //item1
             }
-            case 2:
+            case '2':
             {
                 go_back(&deck1);
                 store_deck(&deck1);
@@ -144,7 +144,7 @@ void for_one_player()
                 store_deck(&deck1);
                 break;
             }
-            default: 	check = 0;
+            default: 	check = 0; break;
         }
         
         give_item(&deck1);
@@ -157,7 +157,7 @@ void for_one_player()
         if (deck1.overcount == 1)
         {
             rank(&deck1);
-            EndGame = 1;
+            EndGame = 0;
             endFLAG = 1;
         }
     }
@@ -176,13 +176,13 @@ void for_player1()
         check = getch();
         switch (check)
         {
-            case 1:
+            case '1':
             {
                 delete_01(&deck1);
                 store_deck(&deck1);
                 break; //item1
             }
-            case 2:
+            case '2':
             {
                 go_back(&deck1);
                 store_deck(&deck1);
@@ -252,13 +252,13 @@ void for_player2()
         check = getch();
         switch (check)
         {
-            case 1:
+            case '1':
             {
                 delete_01(&deck2);
                 store_deck(&deck2);
                 break; //item1
             }
-            case 2:
+            case '2':
             {
                 go_back(&deck2);
                 store_deck(&deck2);
