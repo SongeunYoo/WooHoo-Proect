@@ -543,46 +543,23 @@ void LoadPlayBoard(deck *deck) {
     clear();
     //open curses
     
-    addstr("Welcome to 2048                ");
+    addstr("1: delete 1, 2 blocks\n");
+	addstr("2: go back to the previous state. It can be 10 times.\n\n");
+	addstr("2048 GAME\n");
     addstr(deck->score);
     addstr("\n\n");
     refresh();
-    
-    for (j=0;j<DECKLENGTH;j++) {
-        for (i=0;i<DECKLENGTH;i++) {
-            addstr("       ");
-            refresh();
-        }
-        addstr("\n");//first line
-        refresh();
-        
-        for (i=0;i<DECKLENGTH;i++) {
-            refresh();
-            if (deck->plate[i][j]!=0) {
-                addstr("   ");
-                addstr(deck->plate[i][j]);
-                addstr("   ");
-                refresh();
-                //add color when data inserted
-            }
-            else {
-                addstr("   o   ");
-                refresh();
-            }
-        }
-        addstr("\n");//second line : data inserted
-        refresh();
-        
-        for (i=0;i<DECKLENGTH;i++) {//
 
-            addstr("       ");
-            refresh();
-        }
-        addstr("\n");//third line
-        refresh();
-    }
-    addstr("\n");
-    refresh();
+	for (int i = 0; i < DECKLENGTH; i++)
+	{
+		for (int j = 0; j < DECKLENGTH; j++)
+		{
+			addstr("	");
+                	printw("%d", deck->plate[i][j]);
+                	addstr("	");
+		}
+		addstr("\n\n");
+	}
     
     if(endFLAG == 1)
     {
