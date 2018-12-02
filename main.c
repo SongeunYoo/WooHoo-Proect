@@ -546,8 +546,9 @@ void LoadPlayBoard(deck *deck) {
     addstr("1: delete 1, 2 blocks\n");
 	addstr("2: go back to the previous state. It can be 10 times.\n\n");
 	addstr("2048 GAME\n");
-    addstr(deck->score);
     addstr("\n\n");
+
+	printw("Your Score: %d\n", deck->score);
     refresh();
 
 	for (int i = 0; i < DECKLENGTH; i++)
