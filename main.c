@@ -28,6 +28,7 @@ typedef struct deck {
 	int overcount;
 	int newNum;
 	char userName[100];
+	int count;
 } deck;
 
 deck deck1, deck2;
@@ -80,6 +81,7 @@ int main(void)
 		{
 		case '1': for_one_player(); break;
 		case '2': for_two_players(); break;
+		case '3': rank(); break;
 		default: continue;
 		}
 	}
@@ -108,6 +110,7 @@ void for_one_player()
 
 	while (EndGame)
 	{
+		deck1.count++;
 		new_random(&deck1);
 		LoadPlayBoard(&deck1);
 		check = getch();
@@ -126,7 +129,6 @@ void for_one_player()
 			break; //item2, go back
 		}
 		case 97: //a
-		case 68: //<
 		{
 			go_left(&deck1); //이동
 			block_sum_left(&deck1);//병합 + 점수 계산
@@ -135,7 +137,6 @@ void for_one_player()
 			break;
 		}
 		case 100: //d
-		case 67: //>
 		{
 			go_right(&deck1); //이동
 			block_sum_right(&deck1);//병합 + 점수 계산
@@ -144,7 +145,6 @@ void for_one_player()
 			break;
 		}
 		case 115: //s
-		case 66: //down
 		{
 			go_down(&deck1); //이동
 			block_sum_down(&deck1); //병합 + 점수 계산
@@ -153,7 +153,6 @@ void for_one_player()
 			break;
 		}
 		case 119: //w
-		case 65: //up
 		{
 			go_up(&deck1); //이동
 			block_sum_up(&deck1); //병합 + 점수 계산
@@ -163,22 +162,17 @@ void for_one_player()
 		}
 		default: 	check = 0; break;
 		}
-		addstr("B\n");
 		store_deck(&deck1);
-		addstr("c\n");
-		give_item(&deck1);
-		addstr("D\n");
+		give_item(&deck1);;
 		if (check == 0)
 			continue;
-addstr("E\n");
 		deck1.overcount = overCount(&deck1);
-addstr("F\n");
 		if (deck1.overcount == 1)
 		{
-	addstr("G\n");
 			store_rank(&deck1);
 			EndGame = 0;
 			endFLAG = 1;
+			break;
 		}
 	}
 }
@@ -555,8 +549,8 @@ void LoadPlayBoard(deck *deck) {
 	char color[40]; //draw background color
 	char reset[] = "\033[m"; //delete incorrect color
 
-	initscr();
 	clear();
+	initscr();
 	//open curses
 
 	addstr("1: delete 1, 2 blocks\n");
@@ -565,6 +559,7 @@ void LoadPlayBoard(deck *deck) {
 	addstr("\n\n");
 
 	printw("Your Score: %d\n", deck->score);
+	printw("Your Count: %d\n", deck->count);
 	refresh();
 
 	for (int i = 0; i < DECKLENGTH; i++)
@@ -597,13 +592,12 @@ void store_rank(deck *deck)
     
     fd = open("ranklist.txt", O_CREAT | O_RDWR | O_APPEND, 0644);	/* then open */
     
-    	write(fd,score,strlen(score));
+    	//write(fd,score,strlen(score));
 	write(fd," ",1);
     	write(fd,username,strlen(username));
 	write(fd,"\n",1);
 
 	rank();
-    return 0;
 }
 
 void rank()
