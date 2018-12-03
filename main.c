@@ -107,6 +107,10 @@ void for_one_player()
 	deck1.newNum = 1;
 	new_random(&deck1);
 	deck1.newNum = 1;
+	
+	deck1.standardScore[0] = 100;
+	deck1.standardScore[1] = 500;
+	deck1.item2 = 5;
 
 	while (EndGame)
 	{
@@ -114,7 +118,6 @@ void for_one_player()
 		new_random(&deck1);
 		LoadPlayBoard(&deck1);
 		check = getch();
-		addstr("A\n");
 
 		switch (check)
 		{
@@ -352,14 +355,18 @@ void go_back(deck *deck)//혹은 return 값을 int로 해서 -1이 return될 경
 	if (--deck->storeStart < 0)
 		deck->storeStart = STORELENGTH - 1;
 
+	temp = deck->storeStart - 1;
+	if (temp < 0)
+		temp = STORELENGTH - 1;
+
 	for (int i = 0; i < DECKLENGTH; i++)
 	{
 		for (int j = 0; j < DECKLENGTH; j++)
 		{
-			deck->plate[i][j] = deck->stored_deck[deck->storeStart][i][j];
+			deck->plate[i][j] = deck->stored_deck[temp][i][j];
 		}
 	}
-	deck->score = deck->stored_score[deck->storeStart];
+	deck->score = deck->stored_score[temp];
 	deck->item2--;
 }
 
@@ -434,14 +441,15 @@ int overCount(deck *deck) {
 	}
 
 	//빈칸도 없고 연속된 블럭도 없을 경우 아이템을 쓰게 해줄지 말지 결정하기
-
+/*
 	if (deck->item1 != 0 || deck->item2 == 0)
 		return 0;
 	else
 	{
+*/
 		endFLAG = 1;//GAME OVER: set flag
 		return 1;
-	}
+	//}
 }
 
 int delete_01(deck *deck)
@@ -544,10 +552,7 @@ void give_item(deck *deck) {
 }
 
 void LoadPlayBoard(deck *deck) {
-	int i, j;
 	char c;
-	char color[40]; //draw background color
-	char reset[] = "\033[m"; //delete incorrect color
 
 	clear();
 	initscr();
@@ -560,6 +565,8 @@ void LoadPlayBoard(deck *deck) {
 
 	printw("Your Score: %d\n", deck->score);
 	printw("Your Count: %d\n", deck->count);
+	printw("Item1: %d	Item2: %d\n", deck->item1, deck->item2);
+
 	refresh();
 
 	for (int i = 0; i < DECKLENGTH; i++)
