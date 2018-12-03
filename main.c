@@ -174,7 +174,7 @@ void for_one_player()
 		}
 		default: 	check = 0; break;
 		}
-		store_deck(&deck1);
+		//store_deck(&deck1);
 		give_item(&deck1);;
 		if (check == 0)
 			continue;
@@ -610,7 +610,7 @@ void store_rank(deck *deck)
     fd = open("ranklist.txt", O_CREAT | O_RDWR | O_APPEND, 0644);	/* then open */
     
     sprintf(score, "%d", deck->score);
-    write(fd,score,strlen(score));
+    write(fd,score,strlen(score) * 2);
     write(fd," ",1);
     write(fd,username,strlen(username));
     write(fd,"\n",1);
@@ -694,5 +694,8 @@ void print_rank() {
 	refresh();
 
 	if (c = getch())
+	{
 		endwin();
+		exit(1);
+	}
 }
