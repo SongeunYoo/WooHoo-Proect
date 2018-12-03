@@ -8,6 +8,8 @@
 #define DECKLENGTH 4
 #define STORELENGTH 10
 #define MAX 40
+#define RANKCOUNT 50
+#define oops(m,x)	{ perror(m); exit(x); }
 
 typedef struct deck {
     int plate[DECKLENGTH][DECKLENGTH];
@@ -22,12 +24,13 @@ typedef struct deck {
 
 deck deck1, deck2;
 int endFLAG = 0;
+char getMessage[RANKCOUNT][MAX];
 
 void store_deck(deck *deck);
 void go_back(deck *deck);
 
 int overCount(deck *deck);
-int delete_01(deck *deck);
+int delete_12(deck *deck);
 
 void go_up(deck *deck);
 void go_down(deck *deck);
@@ -39,7 +42,6 @@ void for_two_players();
 void for_player1();
 void for_player2();
 
-int rank(deck *deck);
 void new_random(deck *deck);
 void give_item(deck *deck);
 
@@ -49,6 +51,12 @@ void block_sum_right(deck *deck);
 void block_sum_left(deck *deck);
 
 void LoadPlayBoard(deck *deck);
+
+void store_rank(deck *deck);
+void rank();
+void print_rank();
+void sort_rank(int pipe[2]);
+void store_sorted_rank(int pipe[2]);
 
 int main(void)
 {
@@ -86,22 +94,18 @@ void for_one_player()
     int score = 0, EndGame = 0;
     
     //1인용 창 띄우기
-    printf("hihi\n");
     new_random(&deck1);
-    printf("hihi\n");
     
-    while (!EndGame)
+    while (EndGame)
     {
-        printf("hihi\n");
         new_random(&deck1);
-        scanf("%d", &score); // 임시 체크용 scanf
         LoadPlayBoard(&deck1);
         check = getchar();
         switch (check)
         {
             case 1:
             {
-                delete_01(&deck1);
+                delete_12(&deck1);
                 store_deck(&deck1);
                 break; //item1
             }
@@ -159,8 +163,8 @@ void for_one_player()
         
         if (deck1.overcount == 1)
         {
-            rank(&deck1);
-            EndGame = 1;
+            store_rank(&deck1);
+            EndGame = 0;
             endFLAG = 1;
         }
     }
@@ -181,7 +185,7 @@ void for_player1()
         {
             case 1:
             {
-                delete_01(&deck1);
+                delete_12(&deck1);
                 store_deck(&deck1);
                 break; //item1
             }
@@ -235,7 +239,7 @@ void for_player1()
         
         if (deck1.overcount == -1)
         {
-            rank(&deck1);
+            store_rank(&deck1);
             EndGame = 0;
         }
     }
@@ -257,7 +261,7 @@ void for_player2()
         {
             case 1:
             {
-                delete_01(&deck2);
+                delete_12(&deck2);
                 store_deck(&deck2);
                 break; //item1
             }
@@ -312,7 +316,7 @@ void for_player2()
         
         if (deck2.overcount == -1)
         {
-            rank(&deck2);
+            store_rank(&deck2);
         }
     }
 }
@@ -433,7 +437,7 @@ int overCount(deck *deck) {
     }
 }
 
-int delete_01(deck *deck)
+int delete_12(deck *deck)
 {
     for (int i = 0; i < DECKLENGTH; i++) {
         for (int j = 0; j < DECKLENGTH; j++) { 				//전체적으로 훑어서
@@ -443,38 +447,6 @@ int delete_01(deck *deck)
         }
     }
     deck->item1--;
-}
-
-int rank(deck *deck)
-{
-    int fd;
-    char username[MAX];
-    char *arglist[3];
-    arglist[0] = "sort";
-    arglist[1] = "ranklist";
-    arglist[2] = 0;
-    
-    printf("Enter Your Name : ");
-    scanf("%s",&username);
-    
-    fd = open("ranklist.txt", O_CREAT | O_WRONLY | O_APPEND, 0644);	/* then open */
-    
-    write(fd,score,300);
-    write(fd,username,300);
-    
-    initscr();
-    clear();
-    
-    addstr("USERNAME : ");
-    addstr(username);
-    refresh();
-    getch();
-    
-    endwin();
-    
-    printf("%s\n",username);
-    execvp("sort", arglist);
-
 }
 
 void new_random(deck *deck)
@@ -608,4 +580,102 @@ void LoadPlayBoard(deck *deck) {
         getch();
         endwin();
     }
+}
+
+void store_rank(deck *deck)
+{
+    int fd;
+    char *username[MAX];
+    
+    printf("Enter Your Name : ");
+    scanf("%s",&username);
+    
+    fd = open("ranklist.txt", O_CREAT | O_RDWR | O_APPEND, 0644);	/* then open */
+    
+    	write(fd,score,strlen(score));
+	write(fd," ",1);
+    	write(fd,username,strlen(username));
+	write(fd,"\n",1);
+
+	rank();
+    return 0;
+}
+
+void rank()
+{
+	int	pout[2], pid;
+	FILE	*fout, *fdopen();
+
+	if( pipe(pout) == -1 )
+		oops("pipe failed", 1);
+	
+	if(( pid = fork()) == -1 )
+		oops("cannot fork", 2);
+	if( pid == 0 )				/* child is dc	*/
+		sort_rank(pout);
+	else {
+		store_sorted_rank(pout);		/* parent is ui	*/
+		wait(NULL);			/* wait for child */
+	}
+	
+}
+
+void store_sorted_rank(int pipe[2])
+{
+	FILE	*fpin, *fdopen();
+	
+	fpin  = fdopen( pipe[0], "r" );
+
+	close(pipe[1]);
+
+	for (int i = 0; i < RANKCOUNT; i++)
+	{
+		if (fgets( getMessage[i], BUFSIZ, fpin ) == NULL)
+			break;
+	}
+	fclose(fpin);
+	print_rank();
+}
+
+void sort_rank(int pipe[2])
+{
+	char	*arglist[3];
+
+	if( dup2(pipe[1], 1) == -1 )
+		oops("sort: cannot redirect stdin", 3);
+	close(pipe[0]);
+	close(pipe[1]);
+
+	arglist[0] = "sort";
+	arglist[1] = "ranklist.txt";
+	arglist[2] = 0;
+
+	execvp("sort", arglist);
+	perror("execvp");
+}
+
+void print_rank() {
+	char c;
+
+	clear();
+
+	initscr();
+	//open curses
+
+	addstr("\n\n");
+
+	printw("	Your Score: %d\n\n", deck->score);
+	refresh();
+
+	addstr("		Ranking		\n\n");
+
+	for (int i = 0; i < RANKCOUNT; i++)
+	{
+		addstr("	");
+		printw("%s\n", getMessage[i]);
+	}
+	refresh();
+
+	if (c = getch())
+		endwin();
 }
