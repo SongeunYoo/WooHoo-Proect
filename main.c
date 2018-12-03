@@ -72,6 +72,15 @@ int main(void)
 	//메인 화면 curse로 불러내기
 
 	char check;
+	clear();
+
+	initscr();
+	addstr("\n\n");
+
+	addstr("		1 : One Player 2048\n\n");
+	addstr("		2 : Two Player 2048\n\n");
+	addstr("		3 : View Ranking of Previous Players\n\n");
+	refresh();
 
 	while (1)
 	{
@@ -662,8 +671,6 @@ void sort_rank(int pipe[2])
 
 void print_rank() {
 	char c;
-	char color[40]; //draw background color
-	char reset[] = "\033[m"; //delete incorrect color
 
 	clear();
 
