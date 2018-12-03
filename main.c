@@ -174,7 +174,7 @@ void for_one_player()
 		}
 		default: 	check = 0; break;
 		}
-		//store_deck(&deck1);
+		store_deck(&deck1);
 		give_item(&deck1);;
 		if (check == 0)
 			continue;
@@ -346,8 +346,10 @@ void store_deck(deck *deck)//저장해주는 함수입니다.
 		for (int j = 0; j < DECKLENGTH; j++)
 			deck->stored_deck[deck->storeStart][i][j] = deck->plate[i][j];
 	deck->stored_score[deck->storeStart] = deck->score;
+	
+	deck->storeStart = (++deck->storeStart) % STORELENGTH;
 
-	if ((++deck->storeStart) % STORELENGTH == deck->storeEnd)
+	if (deck->storeStart == deck->storeEnd)
 		deck->storeEnd++;
 }
 
