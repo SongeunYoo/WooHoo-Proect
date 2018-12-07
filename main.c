@@ -119,7 +119,7 @@ void for_one_player()
 	
 	deck1.standardScore[0] = 100;
 	deck1.standardScore[1] = 500;
-	deck1.item2 = 5;
+	deck1.item2 = 1;
 
 	while (EndGame)
 	{
@@ -576,7 +576,8 @@ void LoadPlayBoard(deck *deck) {
 
 	printw("Your Score: %d\n", deck->score);
 	printw("Your Count: %d\n", deck->count);
-	printw("Item1: %d	Item2: %d\n", deck->item1, deck->item2);
+	printw("Item1:		%d	Item2:		%d\n", deck->item1, deck->item2);
+	printw("Next Item1: 	%d	Next Item2:	%d\n\n", deck->standardScore[0], deck->standardScore[1]);
 
 	refresh();
 
@@ -603,14 +604,16 @@ void LoadPlayBoard(deck *deck) {
 void store_rank(deck *deck)
 {
     int fd;
+    int *score[MAX];
     char username[MAX];
     
     printf("Enter Your Name : ");
     scanf("%s",&username);
+    sprintf(score, "%d", deck->score);
     
     fd = open("ranklist.txt", O_CREAT | O_RDWR | O_APPEND, 0644);	/* then open */
 	
-    write(fd,&deck->score,strlen(deck->score));
+    write(fd,score,strlen(score) * 2);
     write(fd," ",1);
     write(fd,username,strlen(username));
     write(fd,"\n",1);
