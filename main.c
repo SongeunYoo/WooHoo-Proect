@@ -622,7 +622,7 @@ void LoadPlayBoard2() {
 	//open curses
 
 	addstr("Player1 - 1, Player2 - 0: delete 1, 2 blocks\n");
-	addstr("Player1 - 8, Player2 - 9: go back to the previous state. It can be 10 times.\n\n");
+	addstr("Player1 - 2, Player2 - 9: go back to the previous state. It can be 10 times.\n\n");
 	addstr("2048 GAME\n");
 	addstr("\n\n");
 
