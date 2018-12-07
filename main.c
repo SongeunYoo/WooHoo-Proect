@@ -27,12 +27,10 @@ typedef struct deck {
 	int item1, item2;
 	int overcount;
 	int newNum;
-	char userName[100];
-	int count;
+	int over;
 } deck;
 
 deck deck1, deck2;
-int endFLAG = 0;
 char getMessage[RANKCOUNT][MAX];
 
 void store_deck(deck *deck);
@@ -123,7 +121,6 @@ void for_one_player()
 
 	while (EndGame)
 	{
-		deck1.count++;
 		new_random(&deck1);
 		LoadPlayBoard(&deck1);
 		check = getch();
@@ -144,46 +141,44 @@ void for_one_player()
 		{
 			go_left(&deck1); //이동
 			block_sum_left(&deck1);//병합 + 점수 계산
-			go_left(&deck1); //이동
-			deck1.newNum = 1;
+			if (deck1.newNum) go_left(&deck1); //이동
 			break;
 		}
 		case 100: //d
 		{
 			go_right(&deck1); //이동
 			block_sum_right(&deck1);//병합 + 점수 계산
-			go_right(&deck1); //이동
-			deck1.newNum = 1;
+			if (deck1.newNum) go_right(&deck1); //이동
 			break;
 		}
 		case 115: //s
 		{
 			go_down(&deck1); //이동
 			block_sum_down(&deck1); //병합 + 점수 계산
-			go_down(&deck1); //이동
-			deck1.newNum = 1;
+			if (deck1.newNum) go_down(&deck1); //이동
 			break;
 		}
 		case 119: //w
 		{
 			go_up(&deck1); //이동
 			block_sum_up(&deck1); //병합 + 점수 계산
-			go_up(&deck1); //이동
-			deck1.newNum = 1;
+			if (deck1.newNum) go_up(&deck1); //이동
 			break;
 		}
 		default: 	check = 0; break;
 		}
-		store_deck(&deck1);
-		give_item(&deck1);;
+
 		if (check == 0)
 			continue;
+
+		store_deck(&deck1);
+		give_item(&deck1);;
+
 		deck1.overcount = overCount(&deck1);
 		if (deck1.overcount == 1)
 		{
 			store_rank(&deck1);
 			EndGame = 0;
-			endFLAG = 1;
 			break;
 		}
 	}
@@ -386,10 +381,11 @@ void go_up(deck *deck)
 	for (int i = 0; i < DECKLENGTH; i++)
 		for (int j = 1; j < DECKLENGTH; j++)
 			for (int k = j; k > 0; k--)
-				if (deck->plate[k - 1][i] == 0)
+				if (deck->plate[k - 1][i] == 0 && deck->plate[k][i] != 0)
 				{
 					deck->plate[k - 1][i] = deck->plate[k][i];
 					deck->plate[k][i] = 0;
+					deck->newNum = 1;
 				}
 }
 
@@ -398,10 +394,11 @@ void go_down(deck *deck)
 	for (int i = 0; i < DECKLENGTH; i++)
 		for (int j = DECKLENGTH - 1; j >= 0; j--)
 			for (int k = j; k < DECKLENGTH - 1; k++)
-				if (deck->plate[k + 1][i] == 0)
+				if (deck->plate[k + 1][i] == 0 && deck->plate[k][i] != 0)
 				{
 					deck->plate[k + 1][i] = deck->plate[k][i];
 					deck->plate[k][i] = 0;
+					deck->newNum = 1;
 				}
 }
 
@@ -410,10 +407,11 @@ void go_left(deck *deck)
 	for (int i = 0; i < DECKLENGTH; i++)
 		for (int j = 1; j < DECKLENGTH; j++)
 			for (int k = j; k > 0; k--)
-				if (deck->plate[i][k - 1] == 0)
+				if (deck->plate[i][k - 1] == 0 && deck->plate[i][k] != 0)
 				{
 					deck->plate[i][k - 1] = deck->plate[i][k];
 					deck->plate[i][k] = 0;
+					deck->newNum = 1;
 				}
 }
 
@@ -422,10 +420,11 @@ void go_right(deck *deck)
 	for (int i = 0; i < DECKLENGTH; i++)
 		for (int j = DECKLENGTH - 1; j >= 0; j--)
 			for (int k = j; k < DECKLENGTH - 1; k++)
-				if (deck->plate[i][k + 1] == 0)
+				if (deck->plate[i][k + 1] == 0 && deck->plate[i][k] != 0)
 				{
 					deck->plate[i][k + 1] = deck->plate[i][k];
 					deck->plate[i][k] = 0;
+					deck->newNum = 1;
 				}
 }
 
@@ -458,7 +457,6 @@ int overCount(deck *deck) {
 	else
 	{
 */
-		endFLAG = 1;//GAME OVER: set flag
 		return 1;
 	//}
 }
@@ -511,6 +509,7 @@ void block_sum_up(deck *deck)
 				deck->plate[i][j] *= 2;
 				deck->plate[i + 1][j] = 0;
 				deck->score += deck->plate[i][j];
+				deck->newNum = 1;
 			}
 }
 void block_sum_down(deck *deck)
@@ -522,6 +521,7 @@ void block_sum_down(deck *deck)
 				deck->plate[i][j] *= 2;
 				deck->plate[i - 1][j] = 0;
 				deck->score += deck->plate[i][j];
+				deck->newNum = 1;
 			}
 }
 void block_sum_right(deck *deck)
@@ -533,6 +533,7 @@ void block_sum_right(deck *deck)
 				deck->plate[i][j] *= 2;
 				deck->plate[i][j - 1] = 0;
 				deck->score += deck->plate[i][j];
+				deck->newNum = 1;
 			}
 }
 void block_sum_left(deck *deck)
@@ -544,6 +545,7 @@ void block_sum_left(deck *deck)
 				deck->plate[i][j] *= 2;
 				deck->plate[i][j + 1] = 0;
 				deck->score += deck->plate[i][j];
+				deck->newNum = 1;
 			}
 }
 
@@ -575,9 +577,8 @@ void LoadPlayBoard(deck *deck) {
 	addstr("\n\n");
 
 	printw("Your Score: %d\n", deck->score);
-	printw("Your Count: %d\n", deck->count);
 	printw("Item1:		%d	Item2:		%d\n", deck->item1, deck->item2);
-	printw("Next Item1: 	%d	Next Item2:	%d\n\n", deck->standardScore[0], deck->standardScore[1]);
+	printw("Next Item1: 	%d	Next Item2:	%d\n\n\n", deck->standardScore[0], deck->standardScore[1]);
 
 	refresh();
 
@@ -587,17 +588,8 @@ void LoadPlayBoard(deck *deck) {
 		{
 			addstr("	");
 			printw("%d", deck->plate[i][j]);
-			addstr("	");
 		}
-		addstr("\n\n\n\n");
-	}
-
-	if (endFLAG == 1)
-	{
-		addstr("Preaa any key to exit\n");
-		refresh();
-		getch();
-		endwin();
+		addstr("\n\n");
 	}
 }
 
