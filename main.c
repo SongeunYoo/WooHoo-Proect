@@ -28,6 +28,7 @@ typedef struct deck {
 	int overcount;
 	int newNum;
 	int over;
+	int count;
 } deck;
 
 deck deck1, deck2;
@@ -58,6 +59,7 @@ void block_sum_right(deck *deck);
 void block_sum_left(deck *deck);
 
 void LoadPlayBoard(deck *deck);
+void LoadPlayBoard2();
 
 void store_rank(deck *deck);
 void rank();
@@ -189,148 +191,166 @@ void for_player1()
 	char check;
 	int EndGame = 1;
 
+	//1인용 창 띄우기
+	deck1.newNum = 1;
 	new_random(&deck1);
+	deck1.newNum = 1;
+	
+	deck1.standardScore[0] = 100;
+	deck1.standardScore[1] = 500;
+	deck1.item2 = 1;
 
 	while (EndGame)
 	{
+		deck1.count++;
 		new_random(&deck1);
+		LoadPlayBoard2();
 		check = getch();
+
 		switch (check)
 		{
 		case '1':
 		{
 			delete_01(&deck1);
-			store_deck(&deck1);
 			break; //item1
 		}
 		case '2':
 		{
 			go_back(&deck1);
-			store_deck(&deck1);
 			break; //item2, go back
 		}
 		case 97: //a
+		case 65: //A
 		{
 			go_left(&deck1); //이동
 			block_sum_left(&deck1);//병합 + 점수 계산
-			go_left(&deck1); //이동
-			store_deck(&deck1);
+			if (deck1.newNum) go_left(&deck1); //이동
 			break;
 		}
 		case 100: //d
+		case 68: //D
 		{
 			go_right(&deck1); //이동
 			block_sum_right(&deck1);//병합 + 점수 계산
-			go_right(&deck1); //이동
-			store_deck(&deck1);
+			if (deck1.newNum) go_right(&deck1); //이동
 			break;
 		}
 		case 115: //s
+		case 83: //S
 		{
 			go_down(&deck1); //이동
 			block_sum_down(&deck1); //병합 + 점수 계산
-			go_down(&deck1); //이동
-			store_deck(&deck1);
+			if (deck1.newNum) go_down(&deck1); //이동
 			break;
 		}
 		case 119: //w
+		case 87: //W
 		{
 			go_up(&deck1); //이동
 			block_sum_up(&deck1); //병합 + 점수 계산
-			go_up(&deck1); //이동
-			store_deck(&deck1);
+			if (deck1.newNum) go_up(&deck1); //이동
 			break;
 		}
-		default: 	check = 0;
+		default: 	check = 0; break;
 		}
-
-		give_item(&deck1);
 
 		if (check == 0)
 			continue;
 
-		deck1.overcount = overCount(&deck1);
+		store_deck(&deck1);
+		give_item(&deck1);;
 
+		deck1.overcount = overCount(&deck1);
 		if (deck1.overcount == 1)
 		{
-			store_rank(&deck1);
+			//store_rank(&deck1);
 			EndGame = 0;
+			break;
 		}
 	}
 }
 
 void for_player2()
 {
+
 	char check;
 	int EndGame = 1;
 
+	//1인용 창 띄우기
+	deck2.newNum = 1;
 	new_random(&deck2);
-	new_random(&deck2);
+	deck2.newNum = 1;
+	
+	deck2.standardScore[0] = 100;
+	deck2.standardScore[1] = 500;
+	deck2.item2 = 1;
 
 	while (EndGame)
 	{
+		deck2.count++;
 		new_random(&deck2);
+		LoadPlayBoard2();
 		check = getch();
+
 		switch (check)
 		{
-		case '1':
+		case '0':
 		{
 			delete_01(&deck2);
-			store_deck(&deck2);
 			break; //item1
 		}
-		case '2':
+		case '9':
 		{
 			go_back(&deck2);
-			store_deck(&deck2);
 			break; //item2, go back
 		}
-		case 97: //a
-		case 68: //<
+		case 106: //j
+		case 74: //J
 		{
 			go_left(&deck2); //이동
 			block_sum_left(&deck2);//병합 + 점수 계산
-			go_left(&deck2); //이동
-			store_deck(&deck2);
+			if (deck2.newNum) go_left(&deck2); //이동
 			break;
 		}
-		case 67: //>
+		case 108: //l
+		case 76: //L
 		{
 			go_right(&deck2); //이동
 			block_sum_right(&deck2);//병합 + 점수 계산
-			go_right(&deck2); //이동
-			store_deck(&deck2);
+			if (deck2.newNum) go_right(&deck2); //이동
 			break;
 		}
-		case 66: //down
+		case 107: //k
+		case 75: //K
 		{
 			go_down(&deck2); //이동
 			block_sum_down(&deck2); //병합 + 점수 계산
-			go_down(&deck2); //이동
-			store_deck(&deck2);
+			if (deck2.newNum) go_down(&deck2); //이동
 			break;
 		}
-		case 65: //up
+		case 105: //i
+		case 73: //I
 		{
 			go_up(&deck2); //이동
 			block_sum_up(&deck2); //병합 + 점수 계산
-			go_up(&deck2); //이동
-			store_deck(&deck2);
+			if (deck2.newNum) go_up(&deck2); //이동
 			break;
 		}
-		default: 	check = 0;
+		default: 	check = 0; break;
 		}
-
-		give_item(&deck2);
 
 		if (check == 0)
 			continue;
 
-		deck2.overcount = overCount(&deck2);
+		store_deck(&deck2);
+		give_item(&deck2);;
 
-		if (deck2.overcount == -1)
+		deck2.overcount = overCount(&deck2);
+		if (deck2.overcount == 1)
 		{
-			store_rank(&deck2);
+			//store_rank(&deck1);
+			EndGame = 0;
+			break;
 		}
 	}
 }
@@ -591,7 +611,46 @@ void LoadPlayBoard(deck *deck) {
 		}
 		addstr("\n\n");
 	}
+	refresh();
 }
+
+void LoadPlayBoard2() {
+	char c;
+
+	clear();
+	initscr();
+	//open curses
+
+	addstr("Player1 - 1, Player2 - 0: delete 1, 2 blocks\n");
+	addstr("Player1 - 8, Player2 - 9: go back to the previous state. It can be 10 times.\n\n");
+	addstr("2048 GAME\n");
+	addstr("\n\n");
+
+	printw("Player1 Score:	%d		 | 	Player2 Score:	%d\n", deck1.score, deck2.score);
+	printw("Player1 count:	%d		 | 	Player2 Count:	%d\n", deck1.count, deck2.count);
+	printw("Item1:	%d Item2:	%d	 | 	Item1:	%d Item2:	%d\n", deck1.item1, deck1.item2, deck2.item1, deck2.item2);
+	printw("Next: 	%d Next:	%d	 | 	Next: 	%d Next:	%d\n\n\n", deck1.standardScore[0], deck1.standardScore[1], deck2.standardScore[0], deck2.standardScore[1]);
+
+	refresh();
+
+	for (int i = 0; i < DECKLENGTH; i++)
+	{
+		for (int j = 0; j < DECKLENGTH; j++)
+		{
+			printw("%d	", deck1.plate[i][j]);
+		}
+		addstr(" | ");
+		
+		for (int j = 0; j < DECKLENGTH; j++)
+		{
+			printw("	%d", deck2.plate[i][j]);
+		}
+
+		addstr("\n\n");
+	}
+	refresh();
+}
+
 
 void store_rank(deck *deck)
 {
