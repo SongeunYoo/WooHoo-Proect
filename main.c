@@ -589,7 +589,7 @@ void LoadPlayBoard(deck *deck) {
 			printw("%d", deck->plate[i][j]);
 			addstr("	");
 		}
-		addstr("\n\n");
+		addstr("\n\n\n\n");
 	}
 
 	if (endFLAG == 1)
