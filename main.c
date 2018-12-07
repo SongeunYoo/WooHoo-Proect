@@ -603,16 +603,14 @@ void LoadPlayBoard(deck *deck) {
 void store_rank(deck *deck)
 {
     int fd;
-    char *username[MAX];
-    char *score[MAX];
+    char username[MAX];
     
     printf("Enter Your Name : ");
     scanf("%s",&username);
     
     fd = open("ranklist.txt", O_CREAT | O_RDWR | O_APPEND, 0644);	/* then open */
-    
-    sprintf(score, "%d", deck->score);
-    write(fd,score,strlen(score) * 2);
+	
+    write(fd,&deck->score,strlen(deck->score));
     write(fd," ",1);
     write(fd,username,strlen(username));
     write(fd,"\n",1);
