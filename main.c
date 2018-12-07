@@ -628,8 +628,8 @@ void LoadPlayBoard2() {
 
 	printw("Player1 Score:	%d		 | 	Player2 Score:	%d\n", deck1.score, deck2.score);
 	printw("Player1 count:	%d		 | 	Player2 Count:	%d\n", deck1.count, deck2.count);
-	printw("Item1:	%d Item2:	%d	 | 	Item1:	%d Item2:	%d\n", deck1.item1, deck1.item2, deck2.item1, deck2.item2);
-	printw("Next: 	%d Next:	%d	 | 	Next: 	%d Next:	%d\n\n\n", deck1.standardScore[0], deck1.standardScore[1], deck2.standardScore[0], deck2.standardScore[1]);
+	printw("Item1:	%d	Item2:	%d	 | 	Item1:	%d	Item2:	%d\n", deck1.item1, deck1.item2, deck2.item1, deck2.item2);
+	printw("Next:	%d	Next:	%d	 | 	Next:	%d	Next:	%d\n\n\n", deck1.standardScore[0], deck1.standardScore[1], deck2.standardScore[0], deck2.standardScore[1]);
 
 	refresh();
 
