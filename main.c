@@ -10,6 +10,7 @@
 #include	<sys/types.h>
 #include	<sys/stat.h>
 #include	<sys/wait.h>
+#include    <termios.h>
 
 
 #define oops(m,x)	{ perror(m); exit(x); }
@@ -67,11 +68,14 @@ void print_rank();
 void sort_rank(int pipe[2]);
 void store_sorted_rank(int pipe[2]);
 
+void echo_on();
+
 int main(void)
 {
     //메인 화면 curse로 불러내기
     
     char check;
+    echo_on();//echo on
     clear();
     
     initscr();
@@ -786,3 +790,18 @@ void store_rank_for_2p()
     rank();
 }
 
+void echo_on()
+{
+    struct termios ttystate;
+    int c;
+    
+    
+    c = tcgetattr(0,&ttystate);
+    
+    
+    if(c == -1 ){
+        perror("tcgetattr");
+        exit(1);
+    }
+    ttystate.c_lflag = 1;
+}
