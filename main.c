@@ -803,5 +803,7 @@ void echo_on()
         perror("tcgetattr");
         exit(1);
     }
-    ttystate.c_lflag = 1;
+    tttystate.c_lflag |= ECHO;
+    tcsetattr( 0, TCSANOW, &ttystate);
 }
+
