@@ -730,31 +730,32 @@ void sort_rank(int pipe[2])
 }
 
 void print_rank() {
-	char c;
-
-	clear();
-
-	initscr();
-	//open curses
-
-	addstr("\n\n");
-
-	refresh();
-
-	addstr("		Ranking		\n\n");
-
-	for (int i = 0; i < RANKCOUNT; i++)
-	{
-		addstr("	");
-		printw("%s\n", getMessage[i]);
-	}
-	refresh();
-
-	if (c = getch())
-	{
-		endwin();
-		exit(1);
-	}
+    char c;
+    
+    clear();
+    
+    initscr();
+    //open curses
+    
+    addstr("\n\n");
+    
+    refresh();
+    
+    addstr("		Ranking		\n\n");
+    
+    for (int i = 0; i < RANKCOUNT; i++)
+    {
+        addstr("	");
+        printw("%s\n", getMessage[i]);
+    }
+    refresh();
+    
+    echo();//echo on
+    if (c = getch())
+    {
+        endwin();
+        exit(1);
+    }
 }
 
 void store_rank_for_2p()
