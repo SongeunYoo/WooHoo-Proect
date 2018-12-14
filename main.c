@@ -28,7 +28,6 @@ typedef struct deck {
 	int overcount;
 	int newNum;
 	int over;
-	int count;
 } deck;
 
 deck deck1, deck2;
@@ -62,6 +61,7 @@ void LoadPlayBoard(deck *deck);
 void LoadPlayBoard2();
 
 void store_rank(deck *deck);
+void store_rank_for_2p();
 void rank();
 void print_rank();
 void sort_rank(int pipe[2]);
@@ -90,7 +90,7 @@ int main(void)
 		{
 		case '1': for_one_player(); break;
 		case '2': for_two_players(); break;
-		case '3': rank(); break;
+		case '3': deck1.score = 99; store_rank_for_2p(); break;
 		default: continue;
 		}
 	}
@@ -263,8 +263,10 @@ void for_player1()
 		deck1.overcount = overCount(&deck1);
 		if (deck1.overcount == 1)
 		{
-			//store_rank(&deck1);
 			EndGame = 0;
+			deck1.over = 1;
+			if (deck2.over == 1)
+				store_rank_for_2p();
 			break;
 		}
 	}
@@ -348,8 +350,10 @@ void for_player2()
 		deck2.overcount = overCount(&deck2);
 		if (deck2.overcount == 1)
 		{
-			//store_rank(&deck1);
 			EndGame = 0;
+			deck2.over = 1;
+			if (deck1.over == 1)
+				store_rank_for_2p();
 			break;
 		}
 	}
@@ -622,12 +626,11 @@ void LoadPlayBoard2() {
 	//open curses
 
 	addstr("Player1 - 1, Player2 - 0: delete 1, 2 blocks\n");
-	addstr("Player1 - 2, Player2 - 9: go back to the previous state. It can be 10 times.\n\n");
+	addstr("Player1 - 8, Player2 - 9: go back to the previous state. It can be 10 times.\n\n");
 	addstr("2048 GAME\n");
 	addstr("\n\n");
 
 	printw("Player1 Score:	%d		 | 	Player2 Score:	%d\n", deck1.score, deck2.score);
-	printw("Player1 count:	%d		 | 	Player2 Count:	%d\n", deck1.count, deck2.count);
 	printw("Item1:	%d	Item2:	%d	 | 	Item1:	%d	Item2:	%d\n", deck1.item1, deck1.item2, deck2.item1, deck2.item2);
 	printw("Next:	%d	Next:	%d	 | 	Next:	%d	Next:	%d\n\n\n", deck1.standardScore[0], deck1.standardScore[1], deck2.standardScore[0], deck2.standardScore[1]);
 
@@ -655,16 +658,17 @@ void LoadPlayBoard2() {
 void store_rank(deck *deck)
 {
     int fd;
-    int *score[MAX];
+    char score[MAX];
     char username[MAX];
     
-    printf("Enter Your Name : ");
-    scanf("%s",&username);
-    sprintf(score, "%d", deck->score);
     
+    sprintf(score, "%d", deck->score);
+    printf("Enter Your Name : ");
+    scanf("%s",username);
+
     fd = open("ranklist.txt", O_CREAT | O_RDWR | O_APPEND, 0644);	/* then open */
 	
-    write(fd,score,strlen(score) * 2);
+    write(fd,score,strlen(score));
     write(fd," ",1);
     write(fd,username,strlen(username));
     write(fd,"\n",1);
@@ -735,7 +739,6 @@ void print_rank() {
 
 	addstr("\n\n");
 
-	//printw("	Your Score: %d\n\n", deck->score);
 	refresh();
 
 	addstr("		Ranking		\n\n");
@@ -752,4 +755,32 @@ void print_rank() {
 		endwin();
 		exit(1);
 	}
+}
+
+void store_rank_for_2p()
+{
+    int fd;
+    char score[2][MAX];
+    char username[2][MAX];
+    
+    
+    sprintf(score[0], "%d", deck1.score);
+	sprintf(score[1], "%d", deck2.score);
+    printf("Enter Your Name for Player1 : ");
+    scanf("%s",username[0]);
+	printf("\nEnter Your Name for Player2 : ");
+    scanf("%s",username[1]);
+
+    fd = open("ranklist.txt", O_CREAT | O_RDWR | O_APPEND, 0644);	/* then open */
+	
+    write(fd,score[0],strlen(score[0]));
+    write(fd," ",1);
+    write(fd,username[0],strlen(username[0]));
+    write(fd,"\n",1);
+    write(fd,score[1],strlen(score[1]));
+    write(fd," ",1);
+    write(fd,username[1],strlen(username[1]));
+    write(fd,"\n",1);
+    
+    rank();
 }
