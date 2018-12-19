@@ -690,7 +690,7 @@ void store_sorted_rank(int pipe[2])
 
 void sort_rank(int pipe[2])
 {
-    char	*arglist[3];
+    char	*arglist[4];
     
     if( dup2(pipe[1], 1) == -1 )
         oops("sort: cannot redirect stdin", 3);
@@ -698,8 +698,9 @@ void sort_rank(int pipe[2])
     close(pipe[1]);
     
     arglist[0] = "sort";
-    arglist[1] = "ranklist.txt";
-    arglist[2] = 0;
+    arglist[1] = "-n";
+    arglist[2] = "ranklist.txt";
+    arglist[3] = 0;
     
     execvp("sort", arglist);
     perror("execvp");
