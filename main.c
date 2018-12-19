@@ -1,6 +1,7 @@
 #include	<stdio.h>
 #include	<stdlib.h>
 #include	<unistd.h>
+#include	<pthread.h>
 #include	<curses.h>
 #include	<fcntl.h>
 #include	<ctype.h>
@@ -306,19 +307,22 @@ void for_two_players()
 
         if (deck1.overcount == 1)
         {
-            EndGame = 0;
             deck1.over = 1;
             if (deck2.over == 1)
+	    {
+		EndGame = 0;
                 store_rank_for_2p();
+	    }
         }
 
         if (deck2.overcount == 1)
         {
-            EndGame = 0;
             deck2.over = 1;
             if (deck1.over == 1)
+	    {
+		EndGame = 0;
                 store_rank_for_2p();
-            break;
+	    }
         }
     }
 }
@@ -602,17 +606,22 @@ void LoadPlayBoard2() {
     
     for (int i = 0; i < DECKLENGTH; i++)
     {
-        for (int j = 0; j < DECKLENGTH; j++)
+
+        if (deck1.over == 0)
         {
-            printw("%d	", deck1.plate[i][j]);
-        }
+		for (int j = 0; j < DECKLENGTH; j++)
+            		printw("%d	", deck1.plate[i][j]);
+
+	}
+
         addstr(" | ");
-        
-        for (int j = 0; j < DECKLENGTH; j++)
+
+        if (deck2.over == 0)
         {
-            printw("	%d", deck2.plate[i][j]);
-        }
-        
+     	   for (int j = 0; j < DECKLENGTH; j++)
+		printw("	%d", deck2.plate[i][j]);
+	}
+
         addstr("\n\n");
     }
     refresh();
