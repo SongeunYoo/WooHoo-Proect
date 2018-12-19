@@ -75,7 +75,6 @@ int main(void)
     //메인 화면 curse로 불러내기
     
     char check;
-    echo_on();//echo on
     clear();
     
     initscr();
@@ -88,14 +87,13 @@ int main(void)
     
     while (1)
     {
-        echo();
         check = getchar();
         
         switch (check)
         {
             case '1': for_one_player(); break;
             case '2': for_two_players(); break;
-            case '3': deck1.score = 99; store_rank_for_2p(); break;
+            case '3': rank(); break;
             default: continue;
         }
     }
@@ -196,7 +194,6 @@ void for_player1()
     char check;
     int EndGame = 1;
     
-    //1인용 창 띄우기
     deck1.newNum = 1;
     new_random(&deck1);
     deck1.newNum = 1;
@@ -280,9 +277,8 @@ void for_player2()
 {
     
     char check;
-    int EndGame = 1;
+    int EndGame = 1, first = 0;
     
-    //1인용 창 띄우기
     deck2.newNum = 1;
     new_random(&deck2);
     deck2.newNum = 1;
@@ -294,7 +290,9 @@ void for_player2()
     while (EndGame)
     {
         new_random(&deck2);
-        LoadPlayBoard2();
+        if (first == 0)
+		first = 1;
+	else LoadPlayBoard2();
         check = getch();
         
         switch (check)
@@ -664,7 +662,7 @@ void store_rank(deck *deck)
     char score[MAX];
     char username[MAX];
     
-    
+    echo_on();
     sprintf(score, "%d", deck->score);
     printf("Enter Your Name : ");
     scanf("%s",username);
@@ -753,7 +751,6 @@ void print_rank() {
     }
     refresh();
     
-    echo();//echo on
     if (c = getch())
     {
         endwin();
@@ -767,7 +764,7 @@ void store_rank_for_2p()
     char score[2][MAX];
     char username[2][MAX];
     
-    echo();
+    echo_on();
     
     sprintf(score[0], "%d", deck1.score);
     sprintf(score[1], "%d", deck2.score);
@@ -803,7 +800,7 @@ void echo_on()
         perror("tcgetattr");
         exit(1);
     }
-    tttystate.c_lflag |= ECHO;
+    ttystate.c_lflag |= ECHO;
     tcsetattr( 0, TCSANOW, &ttystate);
 }
 
