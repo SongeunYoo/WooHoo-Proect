@@ -38,7 +38,7 @@ void store_deck(deck *deck);
 void go_back(deck *deck);
 
 int overCount(deck *deck);
-int delete_01(deck *deck);
+void delete_01(deck *deck);
 
 void go_up(deck *deck);
 void go_down(deck *deck);
@@ -343,7 +343,8 @@ void store_deck(deck *deck)//저장해주는 함수입니다.
 void go_back(deck *deck)//혹은 return 값을 int로 해서 -1이 return될 경우 go_back을 실행하는 쪽에서 오류문 출력하도록 하는 것도 가능합니다.(약간의 수정 필요)
 {
     int temp = 0;
-    
+    if (deck->item2 < 1)
+    	return;
     if (deck->storeStart == deck->storeEnd)
     {
         printf("Cannot go back to the previous state.\n");
@@ -453,8 +454,10 @@ int overCount(deck *deck) {
     //}
 }
 
-int delete_01(deck *deck)
+void delete_01(deck *deck)
 {
+    if ( deck->item1 < 1)
+	return;
     for (int i = 0; i < DECKLENGTH; i++) {
         for (int j = 0; j < DECKLENGTH; j++) { 				//전체적으로 훑어서
             if (deck->plate[i][j] == 1 || deck->plate[i][j] == 2) {	//1과 2 찾아내기
@@ -775,4 +778,3 @@ void echo_on()
     ttystate.c_lflag |= ECHO;
     tcsetattr( 0, TCSANOW, &ttystate);
 }
-
