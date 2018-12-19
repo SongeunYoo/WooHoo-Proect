@@ -1,7 +1,6 @@
 #include	<stdio.h>
 #include	<stdlib.h>
 #include	<unistd.h>
-#include	<pthread.h>
 #include	<curses.h>
 #include	<fcntl.h>
 #include	<ctype.h>
@@ -47,8 +46,6 @@ void go_right(deck *deck);
 
 void for_one_player();
 void for_two_players();
-void for_player1();
-void for_player2();
 
 void new_random(deck *deck);
 void give_item(deck *deck);
@@ -98,16 +95,6 @@ int main(void)
         }
     }
     return 0;
-}
-void for_two_players()
-{
-    //2인용 창 띄우기
-    pthread_t player1, player2;
-    
-    pthread_create(&player1, NULL, for_player1, NULL);
-    pthread_create(&player2, NULL, for_player2, NULL);
-    pthread_join(player1, NULL);
-    pthread_join(player2, NULL);
 }
 
 void for_one_player()
@@ -189,7 +176,7 @@ void for_one_player()
     }
 }
 
-void for_player1()
+void for_two_players()
 {
     char check;
     int EndGame = 1;
@@ -197,14 +184,21 @@ void for_player1()
     deck1.newNum = 1;
     new_random(&deck1);
     deck1.newNum = 1;
-    
     deck1.standardScore[0] = 100;
     deck1.standardScore[1] = 500;
     deck1.item2 = 1;
+
+    deck2.newNum = 1;
+    new_random(&deck2);
+    deck2.newNum = 1;
+    deck2.standardScore[0] = 100;
+    deck2.standardScore[1] = 500;
+    deck2.item2 = 1;
     
     while (EndGame)
     {
         new_random(&deck1);
+        new_random(&deck2);
         LoadPlayBoard2();
         check = getch();
         
@@ -252,52 +246,8 @@ void for_player1()
                 if (deck1.newNum) go_up(&deck1); //이동
                 break;
             }
-            default: 	check = 0; break;
-        }
-        
-        if (check == 0)
-            continue;
-        
-        store_deck(&deck1);
-        give_item(&deck1);;
-        
-        deck1.overcount = overCount(&deck1);
-        if (deck1.overcount == 1)
-        {
-            EndGame = 0;
-            deck1.over = 1;
-            if (deck2.over == 1)
-                store_rank_for_2p();
-            break;
-        }
-    }
-}
 
-void for_player2()
-{
-    
-    char check;
-    int EndGame = 1, first = 0;
-    
-    deck2.newNum = 1;
-    new_random(&deck2);
-    deck2.newNum = 1;
-    
-    deck2.standardScore[0] = 100;
-    deck2.standardScore[1] = 500;
-    deck2.item2 = 1;
-    
-    while (EndGame)
-    {
-        new_random(&deck2);
-        if (first == 0)
-		first = 1;
-	else LoadPlayBoard2();
-        check = getch();
-        
-        switch (check)
-        {
-            case '0':
+           case '0':
             {
                 delete_01(&deck2);
                 break; //item1
@@ -345,10 +295,23 @@ void for_player2()
         if (check == 0)
             continue;
         
+        store_deck(&deck1);
+        give_item(&deck1);
+
         store_deck(&deck2);
-        give_item(&deck2);;
+        give_item(&deck2);
         
+        deck1.overcount = overCount(&deck1);
         deck2.overcount = overCount(&deck2);
+
+        if (deck1.overcount == 1)
+        {
+            EndGame = 0;
+            deck1.over = 1;
+            if (deck2.over == 1)
+                store_rank_for_2p();
+        }
+
         if (deck2.overcount == 1)
         {
             EndGame = 0;
