@@ -616,6 +616,9 @@ void LoadPlayBoard2() {
             		printw("%d	", deck1.plate[i][j]);
 
 	}
+	else
+		for (int j = 0; j < DECKLENGTH; j++)
+			addstr("	");
 
         addstr(" | ");
 
